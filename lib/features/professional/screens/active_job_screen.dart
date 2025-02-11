@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:voltzy_version_3/features/jobs/models/job.dart';
-import 'package:voltzy_version_3/features/professional/models/job_stage.dart';
 import '../../../core/widgets/error_view.dart';
 import '../../../core/widgets/loading_view.dart';
 import '../providers/active_job_provider.dart';
@@ -26,14 +25,16 @@ class ActiveJobScreen extends ConsumerWidget {
       body: SafeArea(
         child: jobAsync.when(
           data: (job) {
-            print('ActiveJobScreen: Job data received: ${job?.toString() ?? "null"}');
+            print(
+                'ActiveJobScreen: Job data received: ${job?.toString() ?? "null"}');
             if (job == null) {
               return const Center(
                 child: Text('No active job'),
               );
             }
 
-            print('ActiveJobScreen: Rendering view for job stage: ${job.stage}');
+            print(
+                'ActiveJobScreen: Rendering view for job stage: ${job.stage}');
             return switch (job.stage) {
               JobStage.enRoute => EnRouteView(job: job),
               JobStage.atLocation => AtLocationView(job: job),
