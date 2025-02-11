@@ -1,16 +1,36 @@
-// Previous imports and DiagnosisView class remain the same...
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:voltzy_version_3/features/jobs/models/job.dart';
+import 'package:voltzy_version_3/features/professional/models/job_stage.dart';
+import 'package:voltzy_version_3/features/professional/providers/active_job_provider.dart';
+import 'package:lucide_icons/lucide_icons.dart';
+
+class DiagnosisStateProvider extends StateNotifier<AsyncValue<void>> {
+  DiagnosisStateProvider() : super(const AsyncValue.data(null));
+
+  Future<void> createQuote(Job job) async {
+    // Implementation here
+  }
+}
+
+final diagnosisStateProvider = StateNotifierProvider<DiagnosisStateProvider, AsyncValue<void>>(
+  (ref) => DiagnosisStateProvider(),
+);
 
 class DiagnosisView extends ConsumerWidget {
+  final Job job;
+  
+  const DiagnosisView({super.key, required this.job});
   // ... existing code ...
 
-  Future<void> _createQuote(WidgetRef ref) async {
+  Future<void> _createQuote(WidgetRef ref, Job job) async {
     try {
       await ref.read(diagnosisStateProvider.notifier).createQuote(job);
       if (!ref.context.mounted) return;
 
       // Update job stage
       await ref
-          .read(active_job.activeJobStageProvider.notifier)
+          .read(activeJobStageProvider.notifier)
           .updateStage(JobStage.quoteCreation);
     } catch (e) {
       debugPrint('Error creating quote: $e');

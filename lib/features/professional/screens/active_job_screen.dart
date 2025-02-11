@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:voltzy_version_3/features/jobs/models/job.dart';
+import 'package:voltzy_version_3/features/professional/models/job_stage.dart';
 import '../../../core/widgets/error_view.dart';
 import '../../../core/widgets/loading_view.dart';
 import '../providers/active_job_provider.dart';
@@ -35,7 +36,7 @@ class ActiveJobScreen extends ConsumerWidget {
             print('ActiveJobScreen: Rendering view for job stage: ${job.stage}');
             return switch (job.stage) {
               JobStage.enRoute => EnRouteView(job: job),
-              JobStage.atLocation => const AtLocationView(),
+              JobStage.atLocation => AtLocationView(job: job),
               JobStage.diagnosis => DiagnosisView(job: job),
               JobStage.quoteCreation => QuoteCreationView(job: job),
               JobStage.inProgress => InProgressView(job: job),
