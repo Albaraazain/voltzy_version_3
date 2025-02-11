@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import '../../../jobs/models/job.dart';
 import '../../providers/active_job_provider.dart' as active_job;
 import '../../providers/job_stages/job_stage_providers.dart';
@@ -15,8 +16,10 @@ class DiagnosisView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final diagnosisState = ref.watch(diagnosisStateProvider);
+    final theme = Theme.of(context);
 
     return Scaffold(
+      backgroundColor: Colors.grey[50],
       body: SafeArea(
         child: switch (diagnosisState) {
           AsyncData<void>() => _buildContent(context, ref),
