@@ -1,5 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../jobs/models/job.dart';
+import 'package:flutter/foundation.dart';
 
 part 'active_job_provider.g.dart';
 
@@ -10,7 +11,7 @@ class ActiveJob extends _$ActiveJob {
     try {
       // Simulate API call
       await Future.delayed(const Duration(seconds: 1));
-      
+
       yield Job(
         id: '1',
         title: 'Fix Leaking Pipe',
@@ -39,14 +40,22 @@ class ActiveJob extends _$ActiveJob {
   }
 
   Future<void> updateStage(JobStage newStage) async {
+    debugPrint('📝 Updating job stage to: $newStage');
     state = const AsyncValue.loading();
+
     state = await AsyncValue.guard(() async {
       final currentJob = state.value;
-      if (currentJob != null) {
-        return currentJob.copyWith(stage: newStage);
+      if (currentJob == null) {
+        debugPrint('❌ Cannot update stage: No active job found');
+        throw Exception('No active job found');
       }
-      return null;
+
+      debugPrint('✅ Updating job stage from ${currentJob.stage} to $newStage');
+      return currentJob.copyWith(stage: newStage);
     });
+
+    final updatedJob = state.value;
+    debugPrint('🔄 Job stage updated: ${updatedJob?.stage}');
   }
 }
 
