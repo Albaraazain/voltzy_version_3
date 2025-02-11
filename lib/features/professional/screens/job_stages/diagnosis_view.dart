@@ -53,14 +53,68 @@ class DiagnosisView extends ConsumerWidget {
               // TODO: Implement message functionality
             },
           ),
-          const SizedBox(height: 16),
-          _PhotoDocumentationSection(
-            photos: const [], // TODO: Store these in state
-            onPhotoAdded: (photoUrl) async {
-              await ref
-                  .read(diagnosisStateProvider.notifier)
-                  .addPhoto(photoUrl);
-            },
+          Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const TimerDisplay(),
+                const SizedBox(height: 24),
+                Text(
+                  'Arrival Verification',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                const SizedBox(height: 12),
+                VerificationCard(
+                  title: 'Location Verification',
+                  icon: LucideIcons.checkCircle,
+                  description: 'Confirm you\'re at the correct location',
+                  status: 'completed',
+                ),
+                const SizedBox(height: 12),
+                VerificationCard(
+                  title: 'Site Photos',
+                  icon: LucideIcons.camera,
+                  description: 'Take photos of the work area',
+                  status: 'pending',
+                ),
+                const SizedBox(height: 24),
+                Text(
+                  'Safety Checklist',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                const SizedBox(height: 12),
+                SafetyCheck(
+                  icon: LucideIcons.shield,
+                  title: 'Personal Protective Equipment',
+                  status: true,
+                ),
+                const SizedBox(height: 12),
+                SafetyCheck(
+                  icon: LucideIcons.alertTriangle,
+                  title: 'Area Safety Check',
+                  status: false,
+                ),
+                const SizedBox(height: 12),
+                SafetyCheck(
+                  icon: LucideIcons.wrench,
+                  title: 'Tools Inspection',
+                  status: false,
+                ),
+                const SizedBox(height: 32),
+                SizedBox(
+                  width: double.infinity,
+                  child: FilledButton(
+                    onPressed: () => _startDiagnosis(ref),
+                    style: FilledButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      backgroundColor: Colors.pink[500],
+                    ),
+                    child: const Text('Start Diagnosis'),
+                  ),
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: 16),
           _DiagnosisNotesField(
@@ -609,6 +663,249 @@ class _PhotoThumbnail extends StatelessWidget {
             fontSize: 12,
           ),
         ),
+      ),
+    );
+  }
+}
+
+class TimerDisplay extends StatelessWidget {
+  const TimerDisplay({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: Colors.grey[200]!),
+      ),
+      padding: const EdgeInsets.all(20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.grey[100]!,
+                      Colors.grey[50]!,
+                    ],
+                  ),
+                ),
+                child: Icon(
+                  LucideIcons.clock,
+                  size: 20,
+                  color: Colors.grey[600],
+                ),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                'Job Timer',
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 6,
+            ),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              gradient: LinearGradient(
+                colors: [
+                  Colors.grey[100]!,
+                  Colors.grey[50]!,
+                ],
+              ),
+            ),
+            child: Text(
+              '00:05:32',
+              style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class VerificationCard extends StatelessWidget {
+  const VerificationCard({
+    super.key,
+    required this.title,
+    required this.icon,
+    required this.description,
+    required this.status,
+  });
+
+  final String title;
+  final IconData icon;
+  final String description;
+  final String status;
+
+  @override
+  Widget build(BuildContext context) {
+    final isCompleted = status == 'completed';
+    
+    return Container(
+      decoration: BoxDecoration(
+        color: isCompleted ? Colors.green[50] : Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: isCompleted ? Colors.green[200]! : Colors.grey[200]!,
+        ),
+      ),
+      padding: const EdgeInsets.all(20),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              gradient: LinearGradient(
+                colors: isCompleted
+                    ? [Colors.green[100]!, Colors.green[50]!]
+                    : [Colors.grey[100]!, Colors.grey[50]!],
+              ),
+            ),
+            child: Icon(
+              icon,
+              size: 20,
+              color: isCompleted ? Colors.green[600] : Colors.grey[600],
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  description,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Colors.grey[600],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 6,
+            ),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              gradient: LinearGradient(
+                colors: isCompleted
+                    ? [Colors.green[100]!, Colors.green[50]!]
+                    : [Colors.pink[100]!, Colors.pink[50]!],
+              ),
+            ),
+            child: Text(
+              isCompleted ? 'Completed' : 'Required',
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                color: isCompleted ? Colors.green[700] : Colors.pink[700],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class SafetyCheck extends StatelessWidget {
+  const SafetyCheck({
+    super.key,
+    required this.icon,
+    required this.title,
+    required this.status,
+  });
+
+  final IconData icon;
+  final String title;
+  final bool status;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: status ? Colors.green[50] : Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: status ? Colors.green[200]! : Colors.grey[200]!,
+        ),
+      ),
+      padding: const EdgeInsets.all(20),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              gradient: LinearGradient(
+                colors: status
+                    ? [Colors.green[100]!, Colors.green[50]!]
+                    : [Colors.grey[100]!, Colors.grey[50]!],
+              ),
+            ),
+            child: Icon(
+              icon,
+              size: 20,
+              color: status ? Colors.green[600] : Colors.grey[600],
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Text(
+              title,
+              style: Theme.of(context).textTheme.titleSmall,
+            ),
+          ),
+          Container(
+            width: 28,
+            height: 28,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              color: status ? Colors.green[100] : Colors.grey[100],
+            ),
+            child: status
+                ? Icon(
+                    LucideIcons.checkCircle,
+                    size: 20,
+                    color: Colors.green[600],
+                  )
+                : Center(
+                    child: Container(
+                      width: 14,
+                      height: 14,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: Colors.grey[400]!,
+                          width: 2,
+                        ),
+                      ),
+                    ),
+                  ),
+          ),
+        ],
       ),
     );
   }
