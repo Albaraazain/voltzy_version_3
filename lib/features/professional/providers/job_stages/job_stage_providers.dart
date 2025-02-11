@@ -1,4 +1,3 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../active_job_provider.dart';
 import '../../../jobs/models/job.dart';
@@ -151,45 +150,46 @@ class AtLocationState extends AutoDisposeAsyncNotifier<void> {
   }
 
   Future<bool> canStartDiagnosis() async {
-    if (state.isLoading) return false;
+    debugPrint('🔍 Checking if can start diagnosis...');
 
-    try {
-      // TODO: Re-implement proper checks when ready
-      return true;
-
-      // Check if all verifications are completed
-      // final allVerificationsComplete = _verificationStatus.values.every((v) => v);
-
-      // Check if all safety items are checked
-      // final allSafetyChecksComplete = _safetyChecklist.values.every((v) => v);
-
-      // return allVerificationsComplete && allSafetyChecksComplete;
-    } catch (e, stack) {
-      state = AsyncError(e, stack);
-      rethrow;
-    }
+    // For development, always allow starting diagnosis
+    debugPrint('✅ Development mode: always allowing diagnosis to start');
+    return true;
   }
 
   Future<void> startDiagnosis(Job job) async {
-    if (state.isLoading) return;
+    debugPrint('🚀 Starting diagnosis for job ${job.id}...');
 
-    state = const AsyncLoading();
+    if (state.isLoading) {
+      debugPrint('⚠️ State is loading, cannot start diagnosis');
+      return;
+    }
+
     try {
-      if (!await canStartDiagnosis()) {
+      // First check if we can start
+      final canStart = await canStartDiagnosis();
+      debugPrint('📋 Can start diagnosis: $canStart');
+
+      if (!canStart) {
         throw Exception(
             'Please complete all required verifications and safety checks');
       }
 
-      // Simulate starting diagnosis
+      // Only set loading state after we know we can proceed
+      state = const AsyncLoading();
+
+      debugPrint('⏳ Simulating diagnosis start...');
       await Future.delayed(const Duration(seconds: 1));
 
-      // Update the job stage
+      debugPrint('📤 Updating job stage to diagnosis...');
       await ref
           .read(activeJobProvider.notifier)
           .updateStage(JobStage.diagnosis);
 
+      debugPrint('✅ Diagnosis started successfully');
       state = const AsyncData(null);
     } catch (e, stack) {
+      debugPrint('❌ Error in startDiagnosis: $e');
       state = AsyncError(e, stack);
       rethrow;
     }
