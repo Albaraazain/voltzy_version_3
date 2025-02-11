@@ -57,12 +57,25 @@ class AtLocationState extends AutoDisposeAsyncNotifier<void> {
     return null;
   }
 
+  // State for verification items
+  final Map<String, bool> _verificationStatus = {
+    'location': false,
+    'photos': false,
+  };
+
+  // State for safety checklist
+  final Map<String, bool> _safetyChecklist = {
+    'ppe': false,
+    'areaSafety': false,
+    'tools': false,
+  };
+
   Future<void> verifyLocation() async {
     if (state.isLoading) return;
 
     state = const AsyncLoading();
     try {
-      // Simulate location verification
+      _verificationStatus['location'] = true;
       await Future.delayed(const Duration(seconds: 1));
       state = const AsyncData(null);
     } catch (e, stack) {
@@ -76,7 +89,7 @@ class AtLocationState extends AutoDisposeAsyncNotifier<void> {
 
     state = const AsyncLoading();
     try {
-      // Simulate adding a site photo
+      _verificationStatus['photos'] = true;
       await Future.delayed(const Duration(seconds: 1));
       state = const AsyncData(null);
     } catch (e, stack) {
@@ -90,13 +103,23 @@ class AtLocationState extends AutoDisposeAsyncNotifier<void> {
 
     state = const AsyncLoading();
     try {
-      // Simulate toggling a safety item
+      if (_safetyChecklist.containsKey(itemId)) {
+        _safetyChecklist[itemId] = !_safetyChecklist[itemId]!;
+      }
       await Future.delayed(const Duration(seconds: 1));
       state = const AsyncData(null);
     } catch (e, stack) {
       state = AsyncError(e, stack);
       rethrow;
     }
+  }
+
+  bool isVerificationComplete(String item) {
+    return _verificationStatus[item] ?? false;
+  }
+
+  bool isSafetyItemChecked(String item) {
+    return _safetyChecklist[item] ?? false;
   }
 
   Future<void> startTimer() async {
@@ -131,9 +154,13 @@ class AtLocationState extends AutoDisposeAsyncNotifier<void> {
     if (state.isLoading) return false;
 
     try {
-      // Simulate checking if all verifications are completed
-      await Future.delayed(const Duration(seconds: 1));
-      return true;
+      // Check if all verifications are completed
+      final allVerificationsComplete = _verificationStatus.values.every((v) => v);
+      
+      // Check if all safety items are checked
+      final allSafetyChecksComplete = _safetyChecklist.values.every((v) => v);
+
+      return allVerificationsComplete && allSafetyChecksComplete;
     } catch (e, stack) {
       state = AsyncError(e, stack);
       rethrow;
