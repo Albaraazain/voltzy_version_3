@@ -36,16 +36,21 @@ class DiagnosisView extends ConsumerWidget {
 
   Widget _buildContent(BuildContext context, WidgetRef ref) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _IssueCategorySelector(
-            selectedCategories: const [], // TODO: Store these in state
-            onCategorySelected: (category) async {
-              await ref
-                  .read(diagnosisStateProvider.notifier)
-                  .updateSelectedCategories([category]);
+          const StageIndicator(
+            stages: ['En Route', 'At Location', 'Diagnosis', 'Quote', 'In Progress', 'Complete'],
+            currentIndex: 2,
+          ),
+          JobHeader(
+            client: job.homeownerName,
+            address: job.location.address,
+            serviceType: job.title,
+            onCallTap: () {
+              // TODO: Implement call functionality
+            },
+            onMessageTap: () {
+              // TODO: Implement message functionality
             },
           ),
           const SizedBox(height: 16),
@@ -91,14 +96,176 @@ class DiagnosisView extends ConsumerWidget {
   }
 }
 
-class _IssueCategorySelector extends StatelessWidget {
-  const _IssueCategorySelector({
-    required this.selectedCategories,
-    required this.onCategorySelected,
+class StageIndicator extends StatelessWidget {
+  const StageIndicator({
+    super.key,
+    required this.stages,
+    required this.currentIndex,
   });
 
-  final List<String> selectedCategories;
-  final void Function(String) onCategorySelected;
+  final List<String> stages;
+  final int currentIndex;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.white,
+      child: Stack(
+        children: [
+          Positioned.fill(
+            bottom: 0,
+            child: Container(
+              height: 96,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.white.withOpacity(0),
+                    Colors.grey.shade50,
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              children: [
+                Row(
+                  children: List.generate(stages.length * 2 - 1, (index) {
+                    if (index.isEven) {
+                      final stageIndex = index ~/ 2;
+                      return _StageIndicatorDot(
+                        isCompleted: stageIndex <= currentIndex,
+                      );
+                    } else {
+                      return _StageIndicatorLine(
+                        isCompleted: (index - 1) ~/ 2 < currentIndex,
+                      );
+                    }
+                  }),
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          stages[currentIndex],
+                          style: Theme.of(context).textTheme.titleSmall,
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            Icon(
+                              LucideIcons.clock,
+                              size: 12,
+                              color: Colors.grey[600],
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Started 5 mins ago',
+                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            Colors.pink.shade100,
+                            Colors.pink.shade50,
+                          ],
+                        ),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        'Step ${currentIndex + 1} of ${stages.length}',
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          color: Colors.pink[700],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _StageIndicatorDot extends StatelessWidget {
+class _StageIndicatorDot extends StatelessWidget {
+  const _StageIndicatorDot({
+    required this.isCompleted,
+  });
+
+  final bool isCompleted;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 12,
+      height: 12,
+      decoration: BoxDecoration(
+        color: isCompleted ? Colors.pink[500] : Colors.grey[200],
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(
+          color: isCompleted ? Colors.pink[100]! : Colors.transparent,
+          width: 4,
+        ),
+      ),
+    );
+  }
+}
+
+class _StageIndicatorLine extends StatelessWidget {
+  const _StageIndicatorLine({
+    required this.isCompleted,
+  });
+
+  final bool isCompleted;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Container(
+        height: 2,
+        color: isCompleted ? Colors.pink[500] : Colors.grey[200],
+      ),
+    );
+  }
+}
+
+class JobHeader extends StatelessWidget {
+  const JobHeader({
+    super.key,
+    required this.client,
+    required this.address,
+    required this.serviceType,
+    required this.onCallTap,
+    required this.onMessageTap,
+  });
+
+  final String client;
+  final String address;
+  final String serviceType;
+  final VoidCallback onCallTap;
+  final VoidCallback onMessageTap;
 
   @override
   Widget build(BuildContext context) {
