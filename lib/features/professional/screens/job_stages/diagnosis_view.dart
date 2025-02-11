@@ -269,48 +269,185 @@ class JobHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
+    return Padding(
+      padding: const EdgeInsets.all(24.0),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.1),
+              blurRadius: 10,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        padding: const EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Issue Categories',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 16),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _CategoryChip(
-                  label: 'Electrical',
-                  icon: Icons.electrical_services,
-                  isSelected: selectedCategories.contains('Electrical'),
-                  onSelected: (selected) => onCategorySelected('Electrical'),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            width: 8,
+                            height: 8,
+                            decoration: BoxDecoration(
+                              color: Colors.green[500],
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            'URGENT REQUEST',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.green[600],
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        serviceType,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Container(
+                            width: 32,
+                            height: 32,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                              gradient: LinearGradient(
+                                colors: [
+                                  Colors.pink[100]!,
+                                  Colors.pink[50]!,
+                                ],
+                              ),
+                            ),
+                            child: Center(
+                              child: Text(
+                                client.split(' ').map((e) => e[0]).join(''),
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.pink[700],
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            client,
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 10,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: Colors.grey[200]!),
+                          gradient: LinearGradient(
+                            colors: [
+                              Colors.grey[50]!,
+                              Colors.white,
+                            ],
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              LucideIcons.alertTriangle,
+                              size: 16,
+                              color: Colors.amber[500],
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              address,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                _CategoryChip(
-                  label: 'Plumbing',
-                  icon: Icons.water_damage,
-                  isSelected: selectedCategories.contains('Plumbing'),
-                  onSelected: (selected) => onCategorySelected('Plumbing'),
-                ),
-                _CategoryChip(
-                  label: 'HVAC',
-                  icon: Icons.ac_unit,
-                  isSelected: selectedCategories.contains('HVAC'),
-                  onSelected: (selected) => onCategorySelected('HVAC'),
-                ),
-                _CategoryChip(
-                  label: 'Structural',
-                  icon: Icons.home,
-                  isSelected: selectedCategories.contains('Structural'),
-                  onSelected: (selected) => onCategorySelected('Structural'),
+                Row(
+                  children: [
+                    _ActionButton(
+                      icon: LucideIcons.phone,
+                      onTap: onCallTap,
+                    ),
+                    const SizedBox(width: 8),
+                    _ActionButton(
+                      icon: LucideIcons.messageCircle,
+                      onTap: onMessageTap,
+                    ),
+                  ],
                 ),
               ],
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ActionButton extends StatelessWidget {
+  const _ActionButton({
+    required this.icon,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          gradient: LinearGradient(
+            colors: [
+              Colors.pink[100]!,
+              Colors.pink[50]!,
+            ],
+          ),
+        ),
+        child: Icon(
+          icon,
+          size: 20,
+          color: Colors.pink[600],
         ),
       ),
     );
