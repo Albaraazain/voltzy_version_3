@@ -35,7 +35,7 @@ class AtLocationView extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _StageIndicator(
+          const _StageIndicator(
             stages: [
               'En Route',
               'At Location',
@@ -203,7 +203,10 @@ class AtLocationView extends ConsumerWidget {
 
   Future<void> _startDiagnosis(WidgetRef ref, Job job) async {
     try {
+      debugPrint('🚀 Starting diagnosis process...');
       await ref.read(atLocationStateProvider.notifier).startDiagnosis(job);
+      debugPrint('✅ Diagnosis started successfully');
+
       if (!ref.context.mounted) return;
 
       // Show success message
@@ -214,6 +217,7 @@ class AtLocationView extends ConsumerWidget {
         ),
       );
     } catch (e) {
+      debugPrint('❌ Error starting diagnosis: $e');
       if (!ref.context.mounted) return;
 
       // Show error message
