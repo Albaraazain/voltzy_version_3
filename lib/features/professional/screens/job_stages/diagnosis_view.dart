@@ -135,7 +135,20 @@ class DiagnosisView extends ConsumerWidget {
     );
   }
 
-  Future<void> _createQuote(WidgetRef ref) async {
+  Future<void> _startDiagnosis(WidgetRef ref) async {
+    final canStart = await ref.read(atLocationStateProvider.notifier).canStartDiagnosis();
+    
+    if (!canStart) {
+      if (!ref.context.mounted) return;
+      ScaffoldMessenger.of(ref.context).showSnackBar(
+        const SnackBar(
+          content: Text('Please complete all verifications and safety checks before starting diagnosis'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
     try {
       await ref.read(diagnosisStateProvider.notifier).submitDiagnosis(job);
       if (!ref.context.mounted) return;
