@@ -6,16 +6,12 @@ import '../../providers/active_job_provider.dart';
 import '../../providers/job_stages/job_stage_providers.dart';
 
 class AtLocationView extends ConsumerWidget {
-  const AtLocationView({super.key});
+  final Job job;
+  const AtLocationView({super.key, required this.job});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final atLocationState = ref.watch(atLocationStateProvider);
-    final job = ref.watch(activeJobProvider).value;
-
-    if (job == null) {
-      return const Center(child: Text('No active job'));
-    }
 
     return Scaffold(
       body: SafeArea(
