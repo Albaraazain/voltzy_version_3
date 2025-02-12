@@ -553,7 +553,16 @@ class _ServiceRequestScreenState extends State<ServiceRequestScreen> {
                   color: Colors.transparent,
                   child: InkWell(
                     onTap: () {
-                      // TODO: Implement continue to review
+                      context.push('/homeowner/request-service/review', extra: {
+                        'categoryId': widget.categoryId,
+                        'categoryName': widget.categoryName,
+                        'issueDescription': _issueController.text,
+                        'photos': _photos,
+                        'location':
+                            '123 Main Street, Boston, MA 02108', // TODO: Get from location selector
+                        'urgency': _urgency,
+                        'notes': _notesController.text,
+                      });
                     },
                     borderRadius: BorderRadius.circular(16),
                     child: const Padding(
