@@ -2,18 +2,43 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-final appThemeProvider = Provider<ThemeData>((ref) {
+// Create a custom pastel amber color
+final pastelAmber = MaterialColor(
+  0xFFFFC107,
+  <int, Color>{
+    50: Color(0xFFFFF8E1),
+    100: Color(0xFFFFECB3),
+    200: Color(0xFFFFE082),
+    300: Color(0xFFFFD54F),
+    400: Color(0xFFFFCA28),
+    500: Color(0xFFFFC107),
+    600: Color(0xFFFFB300),
+    700: Color(0xFFFFA000),
+    800: Color(0xFFFF8F00),
+    900: Color(0xFFFF6F00),
+  },
+);
+
+final professionalThemeProvider = Provider<ThemeData>((ref) {
+  return _buildThemeData(Colors.pink.shade400);
+});
+
+final homeownerThemeProvider = Provider<ThemeData>((ref) {
+  return _buildThemeData(pastelAmber.shade300);
+});
+
+ThemeData _buildThemeData(Color primaryColor) {
   return ThemeData(
     useMaterial3: true,
     scaffoldBackgroundColor: Colors.grey[50],
     colorScheme: ColorScheme.fromSeed(
-      seedColor: Colors.pink.shade400,
-      primary: Colors.pink.shade400,
-      onPrimary: Colors.white,
-      secondary: Colors.blue.shade400,
-      onSecondary: Colors.white,
-      tertiary: Colors.amber.shade400,
-      onTertiary: Colors.white,
+      seedColor: primaryColor,
+      primary: primaryColor,
+      onPrimary: Colors.grey[900]!,
+      secondary: primaryColor.withOpacity(0.8),
+      onSecondary: Colors.grey[900]!,
+      tertiary: primaryColor.withOpacity(0.6),
+      onTertiary: Colors.grey[900]!,
       surface: Colors.grey[50]!,
       onSurface: Colors.grey[900]!,
       surfaceContainerHighest: Colors.grey[300]!,
@@ -86,7 +111,7 @@ final appThemeProvider = Provider<ThemeData>((ref) {
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),
         borderSide: BorderSide(
-          color: Colors.pink.shade500,
+          color: primaryColor,
           width: 2,
         ),
       ),
@@ -98,7 +123,7 @@ final appThemeProvider = Provider<ThemeData>((ref) {
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         elevation: 0,
-        backgroundColor: Colors.blue.shade600,
+        backgroundColor: primaryColor,
         foregroundColor: Colors.white,
         padding: const EdgeInsets.symmetric(
           horizontal: 32,
@@ -112,7 +137,7 @@ final appThemeProvider = Provider<ThemeData>((ref) {
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
         elevation: 0,
-        side: BorderSide(color: Colors.blue.shade600),
+        side: BorderSide(color: primaryColor),
         padding: const EdgeInsets.symmetric(
           horizontal: 32,
           vertical: 16,
@@ -134,4 +159,4 @@ final appThemeProvider = Provider<ThemeData>((ref) {
       ),
     ),
   );
-});
+}
