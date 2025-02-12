@@ -7,9 +7,17 @@ import 'package:voltzy_version_3/features/auth/screens/login_screen.dart';
 import 'package:voltzy_version_3/features/auth/screens/register_screen.dart';
 import 'package:voltzy_version_3/features/homeowner/screens/active_jobs_screen.dart';
 import 'package:voltzy_version_3/features/homeowner/screens/dashboard_screen.dart';
+import 'package:voltzy_version_3/features/homeowner/screens/home_screen.dart';
 import 'package:voltzy_version_3/features/homeowner/screens/job_details_screen.dart';
 import 'package:voltzy_version_3/features/homeowner/screens/profile_screen.dart';
 import 'package:voltzy_version_3/features/homeowner/screens/service_request_screen.dart';
+import 'package:voltzy_version_3/features/homeowner/screens/profile/personal_info_screen.dart';
+import 'package:voltzy_version_3/features/homeowner/screens/profile/addresses_screen.dart';
+import 'package:voltzy_version_3/features/homeowner/screens/profile/payment_methods_screen.dart';
+import 'package:voltzy_version_3/features/homeowner/screens/profile/notifications_screen.dart';
+import 'package:voltzy_version_3/features/homeowner/screens/profile/privacy_screen.dart';
+import 'package:voltzy_version_3/features/homeowner/screens/profile/settings_screen.dart';
+import 'package:voltzy_version_3/features/homeowner/screens/profile/help_screen.dart';
 import 'package:voltzy_version_3/features/professional/screens/active_job_screen.dart';
 import 'package:voltzy_version_3/features/professional/screens/completed_jobs_screen.dart';
 import 'package:voltzy_version_3/features/professional/screens/dashboard_screen.dart';
@@ -65,14 +73,22 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           );
         },
         routes: [
-          // Dashboard
+          // Home
           GoRoute(
             path: '/homeowner',
-            builder: (context, state) => const HomeownerDashboardScreen(),
+            builder: (context, state) => const HomeownerHomeScreen(),
             routes: [
               GoRoute(
                 path: 'request-service',
-                builder: (context, state) => const ServiceRequestScreen(),
+                builder: (context, state) => ServiceRequestScreen(
+                  categoryId: (state.extra
+                      as Map<String, dynamic>)['categoryId'] as String,
+                  categoryName: (state.extra
+                      as Map<String, dynamic>)['categoryName'] as String,
+                  categoryColor:
+                      (state.extra as Map<String, dynamic>)['categoryColor']
+                          as MaterialColor,
+                ),
               ),
             ],
           ),
@@ -98,6 +114,39 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: '/homeowner/profile',
             builder: (context, state) => const HomeownerProfileScreen(),
+            routes: [
+              GoRoute(
+                path: 'personal-info',
+                builder: (context, state) =>
+                    const HomeownerPersonalInfoScreen(),
+              ),
+              GoRoute(
+                path: 'addresses',
+                builder: (context, state) => const HomeownerAddressesScreen(),
+              ),
+              GoRoute(
+                path: 'payment-methods',
+                builder: (context, state) =>
+                    const HomeownerPaymentMethodsScreen(),
+              ),
+              GoRoute(
+                path: 'notifications',
+                builder: (context, state) =>
+                    const HomeownerNotificationsScreen(),
+              ),
+              GoRoute(
+                path: 'privacy',
+                builder: (context, state) => const HomeownerPrivacyScreen(),
+              ),
+              GoRoute(
+                path: 'settings',
+                builder: (context, state) => const HomeownerSettingsScreen(),
+              ),
+              GoRoute(
+                path: 'help',
+                builder: (context, state) => const HomeownerHelpScreen(),
+              ),
+            ],
           ),
         ],
       ),
