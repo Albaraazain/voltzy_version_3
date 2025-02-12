@@ -3,88 +3,179 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../models/service_category_card.dart';
 import '../widgets/location_selector_widget.dart';
+import '../providers/service_category_provider.dart';
 import 'category_services_screen.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../core/providers/auth_provider.dart';
 
-class HomeownerHomeScreen extends StatefulWidget {
-  const HomeownerHomeScreen({super.key});
+class HomeScreen extends ConsumerStatefulWidget {
+  const HomeScreen({super.key});
 
   @override
-  State<HomeownerHomeScreen> createState() => _HomeownerHomeScreenState();
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeownerHomeScreenState extends State<HomeownerHomeScreen> {
-  bool _isLoading = false;
-  List<ServiceCategoryCard> _categories = [];
+class _HomeScreenState extends ConsumerState<HomeScreen> {
   String _selectedDifficulty = 'Emergency';
 
   @override
-  void initState() {
-    super.initState();
-    _loadData();
+  Widget build(BuildContext context) {
+    final categoriesState = ref.watch(serviceCategoryProvider);
+
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header section
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    icon: const Icon(LucideIcons.menu),
+                    onPressed: _showMenu,
+                  ),
+                  const LocationSelectorWidget(),
+                ],
+              ),
+            ),
+
+            // Welcome text
+            const Padding(
+              padding: EdgeInsets.fromLTRB(24, 24, 24, 16),
+              child: Text(
+                'What service do you need?',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+
+            // Difficulty selector
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                children: [
+                  'Emergency',
+                  'Regular',
+                  'Maintenance',
+                ].map((difficulty) {
+                  final isSelected = _selectedDifficulty == difficulty;
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: ChoiceChip(
+                      label: Text(difficulty),
+                      selected: isSelected,
+                      onSelected: (selected) {
+                        if (selected) {
+                          setState(() => _selectedDifficulty = difficulty);
+                        }
+                      },
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+
+            // Categories grid
+            Expanded(
+              child: categoriesState.when(
+                data: (categories) => GridView.builder(
+                  padding: const EdgeInsets.all(16),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 0.85,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                  ),
+                  itemCount: categories.length,
+                  itemBuilder: (context, index) {
+                    final category = categories[index];
+                    return _buildCategoryCard(category);
+                  },
+                ),
+                loading: () => const Center(
+                  child: CircularProgressIndicator(),
+                ),
+                error: (error, stack) => Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Error loading categories',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      const SizedBox(height: 16),
+                      ElevatedButton(
+                        onPressed: () => ref
+                            .read(serviceCategoryProvider.notifier)
+                            .loadCategories(),
+                        child: const Text('Retry'),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
-  Future<void> _loadData() async {
-    setState(() => _isLoading = true);
-    try {
-      // Simulated data loading
-      await Future.delayed(const Duration(seconds: 1));
-      final cardCategories = [
-        ServiceCategoryCard(
-          id: '1',
-          name: 'Electrical Services',
-          description: 'Professional electrical services',
-          iconName: 'electrical',
-          serviceCount: 5,
-          minPrice: 89.99,
-          maxPrice: 1999.99,
-          size: CardSize.medium,
-          accentColor: Colors.blue,
+  Widget _buildCategoryCard(ServiceCategoryCard category) {
+    return InkWell(
+      onTap: () => context.push('/homeowner/category/${category.id}'),
+      child: Card(
+        elevation: 2,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
         ),
-        ServiceCategoryCard(
-          id: '2',
-          name: 'Plumbing Services',
-          description: 'Expert plumbing solutions',
-          iconName: 'plumbing',
-          serviceCount: 5,
-          minPrice: 89.99,
-          maxPrice: 1999.99,
-          size: CardSize.medium,
-          accentColor: Colors.orange,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(
+                LucideIcons.wrench, // TODO: Map iconName to actual icons
+                size: 32,
+                color: category.accentColor,
+              ),
+              const Spacer(),
+              Text(
+                category.name,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                category.description,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey[600],
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                '\$${category.minPrice.toStringAsFixed(0)} - \$${category.maxPrice.toStringAsFixed(0)}',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey[600],
+                ),
+              ),
+            ],
+          ),
         ),
-        ServiceCategoryCard(
-          id: '3',
-          name: 'HVAC Services',
-          description: 'Complete HVAC maintenance',
-          iconName: 'hvac',
-          serviceCount: 5,
-          minPrice: 89.99,
-          maxPrice: 1999.99,
-          size: CardSize.medium,
-          accentColor: Colors.green,
-        ),
-        ServiceCategoryCard(
-          id: '4',
-          name: 'Cleaning Services',
-          description: 'Professional cleaning services',
-          iconName: 'cleaning',
-          serviceCount: 5,
-          minPrice: 89.99,
-          maxPrice: 1999.99,
-          size: CardSize.medium,
-          accentColor: Colors.teal,
-        ),
-      ];
-
-      setState(() => _categories = cardCategories);
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error loading data: $e')),
-        );
-      }
-    } finally {
-      if (mounted) setState(() => _isLoading = false);
-    }
+      ),
+    );
   }
 
   void _showMenu() {
@@ -220,10 +311,23 @@ class _HomeownerHomeScreenState extends State<HomeownerHomeScreen> {
                             'Sign Out',
                             animation,
                             6,
-                            onTap: () {
+                            onTap: () async {
                               Navigator.pop(context);
-                              // TODO: Implement sign out
-                              context.go('/');
+                              try {
+                                await ref.read(authProvider.notifier).signOut();
+                                if (context.mounted) {
+                                  context.go('/');
+                                }
+                              } catch (e) {
+                                if (context.mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Error signing out: $e'),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                }
+                              }
                             },
                           ),
                           const SizedBox(height: 32),
@@ -287,157 +391,6 @@ class _HomeownerHomeScreenState extends State<HomeownerHomeScreen> {
             onTap: onTap,
           ),
         ),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: _isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : RefreshIndicator(
-                onRefresh: _loadData,
-                child: CustomScrollView(
-                  slivers: [
-                    SliverToBoxAdapter(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                GestureDetector(
-                                  onTap: _showMenu,
-                                  child: Container(
-                                    padding: const EdgeInsets.all(12),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(16),
-                                      border:
-                                          Border.all(color: Colors.grey[200]!),
-                                    ),
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                          width: 16,
-                                          height: 2,
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey[800],
-                                            borderRadius:
-                                                BorderRadius.circular(1),
-                                          ),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Container(
-                                          width: 12,
-                                          height: 2,
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey[800],
-                                            borderRadius:
-                                                BorderRadius.circular(1),
-                                          ),
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Container(
-                                          width: 8,
-                                          height: 2,
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey[800],
-                                            borderRadius:
-                                                BorderRadius.circular(1),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.all(8),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(16),
-                                    border:
-                                        Border.all(color: Colors.grey[200]!),
-                                  ),
-                                  child: Icon(
-                                    LucideIcons.bell,
-                                    size: 24,
-                                    color: Colors.grey[800],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 32),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 24),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Welcome Back!',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headlineMedium
-                                      ?.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  'What service do you need today?',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleMedium
-                                      ?.copyWith(
-                                        color: Colors.grey[600],
-                                      ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SliverToBoxAdapter(
-                      child: LocationSelectorWidget(),
-                    ),
-                    SliverPadding(
-                      padding: const EdgeInsets.all(24),
-                      sliver: SliverGrid(
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          mainAxisSpacing: 16,
-                          crossAxisSpacing: 16,
-                          childAspectRatio: 0.85,
-                        ),
-                        delegate: SliverChildBuilderDelegate(
-                          (context, index) {
-                            final category = _categories[index];
-                            return GestureDetector(
-                              onTap: () {
-                                context
-                                    .push('/homeowner/request-service', extra: {
-                                  'categoryId': category.id,
-                                  'categoryName': category.name,
-                                  'categoryColor': category.accentColor,
-                                });
-                              },
-                              child: category,
-                            );
-                          },
-                          childCount: _categories.length,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
       ),
     );
   }
