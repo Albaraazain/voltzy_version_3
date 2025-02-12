@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logger/logger.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:voltzy_version_3/core/navigation/app_shell.dart';
+import 'package:voltzy_version_3/core/repositories/auth_repository.dart';
+import 'package:voltzy_version_3/core/providers/auth_provider.dart';
 import 'package:voltzy_version_3/features/auth/screens/login_screen.dart';
-import 'package:voltzy_version_3/features/auth/screens/register_screen.dart';
+import 'package:voltzy_version_3/features/auth/screens/signup_screen.dart';
 import 'package:voltzy_version_3/features/homeowner/screens/active_jobs_screen.dart';
-import 'package:voltzy_version_3/features/homeowner/screens/dashboard_screen.dart';
 import 'package:voltzy_version_3/features/homeowner/screens/home_screen.dart';
 import 'package:voltzy_version_3/features/homeowner/screens/job_details_screen.dart';
 import 'package:voltzy_version_3/features/homeowner/screens/profile_screen.dart';
@@ -28,6 +30,9 @@ import 'package:voltzy_version_3/features/professional/screens/settings_screen.d
 import 'package:voltzy_version_3/features/professional/screens/support_screen.dart';
 import 'package:voltzy_version_3/features/welcome/screens/welcome_screen.dart';
 import 'package:voltzy_version_3/shared/screens/messages_screen.dart';
+import 'package:voltzy_version_3/features/homeowner/screens/review_broadcast_screen.dart';
+import 'package:voltzy_version_3/features/homeowner/screens/finding_professionals_screen.dart';
+import 'package:voltzy_version_3/features/homeowner/screens/service_initiation_screen.dart';
 
 final _logger = Logger(
   printer: PrettyPrinter(
@@ -40,12 +45,38 @@ final _logger = Logger(
 );
 
 final appRouterProvider = Provider<GoRouter>((ref) {
+  final authRepository = ref.watch(authRepositoryProvider);
+  final authState = ref.watch(authProvider);
+
   return GoRouter(
     initialLocation: '/',
     debugLogDiagnostics: true,
     observers: [
       NavigationObserver(),
     ],
+    redirect: (context, state) {
+      final isLoggedIn = authState.user != null;
+      final isAuthRoute =
+          state.uri.path == '/login' || state.uri.path == '/register';
+      final isWelcomeRoute = state.uri.path == '/';
+
+      // Use the user type from auth provider state
+      final isProfessional = authState.userType == UserType.professional;
+
+      if (!isLoggedIn) {
+        // If not logged in and not on an auth route, go to welcome screen
+        if (!isAuthRoute && !isWelcomeRoute) {
+          return '/';
+        }
+      } else {
+        // If logged in and on an auth route or welcome route, redirect to appropriate dashboard
+        if (isAuthRoute || isWelcomeRoute) {
+          return isProfessional ? '/professional' : '/homeowner';
+        }
+      }
+
+      return null;
+    },
     routes: [
       // Welcome Route (Initial Route)
       GoRoute(
@@ -60,7 +91,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/register',
-        builder: (context, state) => const RegisterScreen(),
+        builder: (context, state) => const SignupScreen(),
       ),
 
       // Homeowner Routes
@@ -76,7 +107,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           // Home
           GoRoute(
             path: '/homeowner',
-            builder: (context, state) => const HomeownerHomeScreen(),
+            builder: (context, state) => const HomeScreen(),
             routes: [
               GoRoute(
                 path: 'request-service',
@@ -89,6 +120,60 @@ final appRouterProvider = Provider<GoRouter>((ref) {
                       (state.extra as Map<String, dynamic>)['categoryColor']
                           as MaterialColor,
                 ),
+                routes: [
+                  GoRoute(
+                    path: 'review',
+                    builder: (context, state) => ReviewBroadcastScreen(
+                      categoryId: (state.extra
+                          as Map<String, dynamic>)['categoryId'] as String,
+                      categoryName: (state.extra
+                          as Map<String, dynamic>)['categoryName'] as String,
+                      issueDescription: (state.extra
+                              as Map<String, dynamic>)['issueDescription']
+                          as String,
+                      photos: (state.extra as Map<String, dynamic>)['photos']
+                          as List<String>,
+                      location: (state.extra
+                          as Map<String, dynamic>)['location'] as String,
+                      urgency: (state.extra as Map<String, dynamic>)['urgency']
+                          as String,
+                      notes: (state.extra as Map<String, dynamic>)['notes']
+                          as String,
+                    ),
+                    routes: [
+                      GoRoute(
+                        path: 'finding',
+                        builder: (context, state) => FindingProfessionalsScreen(
+                          categoryId: (state.extra
+                              as Map<String, dynamic>)['categoryId'] as String,
+                          categoryName: (state.extra
+                                  as Map<String, dynamic>)['categoryName']
+                              as String,
+                        ),
+                        routes: [
+                          GoRoute(
+                            path: 'service-initiation',
+                            builder: (context, state) =>
+                                ServiceInitiationScreen(
+                              categoryId: (state.extra
+                                      as Map<String, dynamic>)['categoryId']
+                                  as String,
+                              categoryName: (state.extra
+                                      as Map<String, dynamic>)['categoryName']
+                                  as String,
+                              professional: (state.extra
+                                      as Map<String, dynamic>)['professional']
+                                  as Map<String, dynamic>,
+                              service: (state.extra
+                                      as Map<String, dynamic>)['service']
+                                  as Map<String, dynamic>,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ],
           ),
