@@ -19,11 +19,11 @@ class AppShell extends StatelessWidget {
   final bool isProfessional;
 
   const AppShell({
-    Key? key,
+    super.key,
     required this.child,
     required this.currentPath,
     required this.isProfessional,
-  }) : super(key: key);
+  });
 
   int _findBestMatchingIndex(String location, List<_NavItem> items) {
     // First try exact match
@@ -71,34 +71,50 @@ class AppShell extends StatelessWidget {
 
     return Scaffold(
       body: child,
-      bottomNavigationBar: FlashyTabBar(
-        selectedIndex: currentIndex >= 0 ? currentIndex : 0,
-        showElevation: true,
-        onItemSelected: (index) {
-          final targetPath = items[index].path;
-          _logger.i('🎯 Navigation Requested:'
-              '\n  - Current Index: $currentIndex'
-              '\n  - Target Index: $index'
-              '\n  - Current Path: $location'
-              '\n  - Target Path: $targetPath');
+      bottomNavigationBar: SafeArea(
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 12,
+                offset: const Offset(0, -2),
+              ),
+            ],
+          ),
+          child: FlashyTabBar(
+            height: 65,
+            selectedIndex: currentIndex >= 0 ? currentIndex : 0,
+            showElevation: false,
+            backgroundColor: Colors.white,
+            onItemSelected: (index) {
+              final targetPath = items[index].path;
+              _logger.i('🎯 Navigation Requested:'
+                  '\n  - Current Index: $currentIndex'
+                  '\n  - Target Index: $index'
+                  '\n  - Current Path: $location'
+                  '\n  - Target Path: $targetPath');
 
-          if (index != currentIndex) {
-            _logger.d('🚀 Executing Navigation:'
-                '\n  - From: $location'
-                '\n  - To: $targetPath');
-            context.go(targetPath);
-          } else {
-            _logger.d('⏭️ Navigation Skipped - Already at index $index');
-          }
-        },
-        items: items
-            .map((item) => FlashyTabBarItem(
-                  icon: Icon(item.icon),
-                  title: Text(item.label),
-                  activeColor: Theme.of(context).primaryColor,
-                  inactiveColor: Colors.grey,
-                ))
-            .toList(),
+              if (index != currentIndex) {
+                _logger.d('🚀 Executing Navigation:'
+                    '\n  - From: $location'
+                    '\n  - To: $targetPath');
+                context.go(targetPath);
+              } else {
+                _logger.d('⏭️ Navigation Skipped - Already at index $index');
+              }
+            },
+            items: items
+                .map((item) => FlashyTabBarItem(
+                      icon: Icon(item.icon),
+                      title: Text(item.label),
+                      activeColor: Theme.of(context).colorScheme.primary,
+                      inactiveColor: Colors.grey.shade400,
+                    ))
+                .toList(),
+          ),
+        ),
       ),
     );
   }
