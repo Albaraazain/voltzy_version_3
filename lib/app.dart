@@ -7,9 +7,8 @@ import 'package:voltzy_version_3/core/providers/auth_provider.dart';
 import 'package:voltzy_version_3/core/repositories/auth_repository.dart';
 
 class App extends ConsumerWidget {
-  const App({super.key, required this.router});
+  const App({super.key});
   
-  final GoRouter router;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -22,11 +21,12 @@ class App extends ConsumerWidget {
     return MaterialApp.router(
       title: 'Voltzy',
       theme: theme,
-      routerConfig: router,
+      routerConfig: router,  // Only use this line
       debugShowCheckedModeBanner: false,
-      routeInformationParser: router.routeInformationParser,
-      routerDelegate: router.routerDelegate,
-      routeInformationProvider: router.routeInformationProvider,
+      // Remove these lines:
+      // routeInformationParser: router.routeInformationParser,
+      // routerDelegate: router.routerDelegate,
+      // routeInformationProvider: router.routeInformationProvider,
     );
   }
 }
