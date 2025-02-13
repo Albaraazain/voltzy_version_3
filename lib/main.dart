@@ -2,16 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'app.dart';
+import 'dart:developer' as developer;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  developer.log('Initializing Supabase...');
+
   // Initialize Supabase
   await Supabase.initialize(
-    url: 'https://nushpmtzsnpbxoncpnox.supabase.co',
+    url: 'http://127.0.0.1:54321',
     anonKey:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im51c2hwbXR6c25wYnhvbmNwbm94Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzkzNzk5NzksImV4cCI6MjA1NDk1NTk3OX0.tfe3v0tBFrpwNQBs6H3KdbJbTVI8zJk-oXKlswxGd60',
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0',
   );
+
+  developer.log('Supabase initialized successfully');
 
   runApp(
     const ProviderScope(
