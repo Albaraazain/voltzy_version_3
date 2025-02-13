@@ -33,6 +33,7 @@ import 'package:voltzy_version_3/shared/screens/messages_screen.dart';
 import 'package:voltzy_version_3/features/homeowner/screens/review_broadcast_screen.dart';
 import 'package:voltzy_version_3/features/homeowner/screens/finding_professionals_screen.dart';
 import 'package:voltzy_version_3/features/homeowner/screens/service_initiation_screen.dart';
+import 'dart:developer' as developer;
 
 final _logger = Logger(
   printer: PrettyPrinter(
@@ -55,26 +56,49 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       NavigationObserver(),
     ],
     redirect: (context, state) {
+      developer.log(
+          'Router redirect - Path: ${state.uri.path}, Auth state: ${authState.user != null}');
+
       final isLoggedIn = authState.user != null;
       final isAuthRoute =
           state.uri.path == '/login' || state.uri.path == '/register';
       final isWelcomeRoute = state.uri.path == '/';
-
-      // Use the user type from auth provider state
       final isProfessional = authState.userType == UserType.professional;
 
+      developer.log(
+          'Router state - isLoggedIn: $isLoggedIn, isAuthRoute: $isAuthRoute, isWelcomeRoute: $isWelcomeRoute, isProfessional: $isProfessional');
+
       if (!isLoggedIn) {
-        // If not logged in and not on an auth route, go to welcome screen
+        // If not logged in and trying to access protected routes, go to welcome screen
         if (!isAuthRoute && !isWelcomeRoute) {
+          developer.log('Redirecting to welcome screen - not logged in');
           return '/';
         }
-      } else {
-        // If logged in and on an auth route or welcome route, redirect to appropriate dashboard
-        if (isAuthRoute || isWelcomeRoute) {
-          return isProfessional ? '/professional' : '/homeowner';
-        }
+        // Allow access to welcome and auth routes
+        return null;
       }
 
+      // If logged in and on auth/welcome routes, redirect to appropriate dashboard
+      if (isAuthRoute || isWelcomeRoute) {
+        final destination = isProfessional ? '/professional' : '/homeowner';
+        developer.log('Redirecting to dashboard: $destination');
+        return destination;
+      }
+
+      // If logged in and accessing the wrong type of routes
+      if (isProfessional && !state.uri.path.startsWith('/professional')) {
+        developer.log('Redirecting professional to professional dashboard');
+        return '/professional';
+      }
+
+      if (!isProfessional &&
+          !state.uri.path.startsWith('/homeowner') &&
+          !isAuthRoute) {
+        developer.log('Redirecting homeowner to homeowner dashboard');
+        return '/homeowner';
+      }
+
+      developer.log('No redirect needed');
       return null;
     },
     routes: [
@@ -87,11 +111,27 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       // Auth Routes
       GoRoute(
         path: '/login',
-        builder: (context, state) => const LoginScreen(),
+        builder: (context, state) {
+          final userTypeStr = (state.extra as Map<String, String>)['userType'];
+          final userType = UserType.values.firstWhere(
+            (type) => type.name == userTypeStr,
+            orElse: () => UserType.homeowner,
+          );
+          developer.log('Login route - User type: $userType');
+          return LoginScreen(userType: userType);
+        },
       ),
       GoRoute(
         path: '/register',
-        builder: (context, state) => const SignupScreen(),
+        builder: (context, state) {
+          final userTypeStr = (state.extra as Map<String, String>)['userType'];
+          final userType = UserType.values.firstWhere(
+            (type) => type.name == userTypeStr,
+            orElse: () => UserType.homeowner,
+          );
+          developer.log('Register route - User type: $userType');
+          return SignupScreen(userType: userType);
+        },
       ),
 
       // Homeowner Routes

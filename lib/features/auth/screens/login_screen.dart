@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'dart:developer' as developer;
 import '../../../core/providers/auth_provider.dart';
 import '../../../core/repositories/auth_repository.dart';
 import 'signup_screen.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
-  const LoginScreen({super.key});
+  final UserType userType;
+
+  const LoginScreen({
+    super.key,
+    required this.userType,
+  });
 
   @override
   ConsumerState<LoginScreen> createState() => _LoginScreenState();
@@ -19,6 +25,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   bool _obscurePassword = true;
 
   @override
+  void initState() {
+    super.initState();
+    developer.log('Login Screen initialized for user type: ${widget.userType}');
+  }
+
+  @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
@@ -26,11 +38,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Future<void> _login() async {
+    developer.log('Attempting login for user type: ${widget.userType}');
     if (_formKey.currentState?.validate() ?? false) {
-      await ref.read(authProvider.notifier).signIn(
-            email: _emailController.text,
-            password: _passwordController.text,
-          );
+      try {
+        await ref.read(authProvider.notifier).signIn(
+              email: _emailController.text,
+              password: _passwordController.text,
+              userType: widget.userType,
+            );
+        developer.log('Login attempt completed');
+      } catch (e) {
+        developer.log('Login error: $e');
+        // Error will be handled by the auth state
+      }
     }
   }
 
@@ -38,6 +58,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
     final theme = Theme.of(context);
+
+    developer.log('Login Screen build - Auth State: $authState');
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -75,7 +97,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Sign in to continue using Voltzy',
+                  'Sign in as ${widget.userType == UserType.professional ? 'Professional' : 'Homeowner'}',
                   style: theme.textTheme.bodyLarge?.copyWith(
                     color: Colors.grey[600],
                   ),
@@ -195,7 +217,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const SignupScreen(),
+                      builder: (context) =>
+                          SignupScreen(userType: widget.userType),
                     ));
                   },
                   child: RichText(
