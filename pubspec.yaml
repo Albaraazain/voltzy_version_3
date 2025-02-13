@@ -29,6 +29,7 @@ dependencies:
   
   # Navigation
   go_router: ^13.1.0
+  go_router_builder: ^1.0.0
   
   # UI Components
   google_fonts: ^6.1.0

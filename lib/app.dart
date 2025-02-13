@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:voltzy_version_3/core/config/app_theme.dart';
 import 'package:voltzy_version_3/core/navigation/app_router.dart';
 import 'package:voltzy_version_3/core/providers/auth_provider.dart';
 import 'package:voltzy_version_3/core/repositories/auth_repository.dart';
 
 class App extends ConsumerWidget {
-  const App({super.key});
+  const App({super.key, required this.router});
+  
+  final GoRouter router;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -21,6 +24,9 @@ class App extends ConsumerWidget {
       theme: theme,
       routerConfig: router,
       debugShowCheckedModeBanner: false,
+      routeInformationParser: router.routeInformationParser,
+      routerDelegate: router.routerDelegate,
+      routeInformationProvider: router.routeInformationProvider,
     );
   }
 }
