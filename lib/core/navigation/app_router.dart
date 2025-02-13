@@ -55,6 +55,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     observers: [
       NavigationObserver(),
     ],
+    // Add router context extension
+    navigatorKey: GlobalKey<NavigatorState>(),
     redirect: (context, state) {
       developer.log(
           'Router redirect - Path: ${state.uri.path}, Auth state: ${authState.user != null}');

@@ -18,9 +18,19 @@ Future<void> main() async {
 
   developer.log('Supabase initialized successfully');
 
+  final router = GoRouter(
+    routes: [
+      GoRoute(
+        path: '/',
+        builder: (context, state) => const WelcomeScreen(),
+      ),
+      // Add other routes here
+    ],
+  );
+
   runApp(
-    const ProviderScope(
-      child: App(),
+    ProviderScope(
+      child: App(router: router),
     ),
   );
 }
