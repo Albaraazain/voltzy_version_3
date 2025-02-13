@@ -79,7 +79,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       }
 
       // If logged in and on auth/welcome routes, redirect to appropriate dashboard
-      if (isAuthRoute || isWelcomeRoute) {
+      // Only redirect from welcome route, not auth routes
+      if (isWelcomeRoute) {
         final destination = isProfessional ? '/professional' : '/homeowner';
         developer.log('Redirecting to dashboard: $destination');
         return destination;

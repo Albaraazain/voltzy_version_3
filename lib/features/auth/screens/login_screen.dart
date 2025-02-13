@@ -47,6 +47,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               userType: widget.userType,
             );
         developer.log('Login attempt completed');
+        
+        if (mounted) {
+          final destination = widget.userType == UserType.professional 
+              ? '/professional' 
+              : '/homeowner';
+          context.go(destination);
+        }
       } catch (e) {
         developer.log('Login error: $e');
         // Error will be handled by the auth state
