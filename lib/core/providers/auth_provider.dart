@@ -1,6 +1,17 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:logger/logger.dart';
 import '../repositories/auth_repository.dart';
+
+final _logger = Logger(
+  printer: PrettyPrinter(
+    methodCount: 0,
+    errorMethodCount: 5,
+    lineLength: 50,
+    colors: true,
+    printEmojis: true,
+  ),
+);
 
 class AuthState {
   final User? user;
@@ -38,10 +49,16 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   void _init() {
+    _logger.i('AuthNotifier: Initializing auth state');
+    
     _authRepository.authStateChanges.listen((event) async {
+      _logger.i('AuthNotifier: Auth state change detected - ${event.event}');
+      
       if (event.event == AuthChangeEvent.signedIn) {
+        _logger.i('AuthNotifier: User signed in, loading user type');
         await _loadUserType();
       } else if (event.event == AuthChangeEvent.signedOut) {
+        _logger.i('AuthNotifier: User signed out, resetting state');
         state = const AuthState();
       }
     });
@@ -49,8 +66,12 @@ class AuthNotifier extends StateNotifier<AuthState> {
     // Check initial auth state
     final user = _authRepository.currentUser;
     if (user != null) {
+      _logger.i('AuthNotifier: Found existing user - ${user.email}');
       state = state.copyWith(user: user);
+      _logger.i('AuthNotifier: Loading user type for existing user');
       _loadUserType();
+    } else {
+      _logger.i('AuthNotifier: No existing user found');
     }
   }
 
