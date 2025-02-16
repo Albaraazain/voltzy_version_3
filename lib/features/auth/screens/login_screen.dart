@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'dart:developer' as developer;
 import '../../../core/providers/auth_provider.dart';
@@ -44,7 +45,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         await ref.read(authProvider.notifier).signIn(
               email: _emailController.text,
               password: _passwordController.text,
-              userType: widget.userType,
             );
         developer.log('Login attempt completed');
         
@@ -224,8 +224,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) =>
-                          SignupScreen(userType: widget.userType),
+                      builder: (context) => const SignupScreen(),
                     ));
                   },
                   child: RichText(
