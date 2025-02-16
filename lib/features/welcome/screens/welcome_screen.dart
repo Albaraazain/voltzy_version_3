@@ -1,12 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:voltzy_version_3/core/providers/auth_provider.dart';
+import 'package:voltzy_version_3/core/repositories/auth_repository.dart';
 import 'package:voltzy_version_3/shared/widgets/buttons.dart';
 
-class WelcomeScreen extends StatelessWidget {
+class WelcomeScreen extends ConsumerWidget {
   const WelcomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authState = ref.watch(authProvider);
+
+    // Show loading indicator if user is logged in but type not determined
+    if (authState.user != null && authState.userType == null) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -32,7 +45,10 @@ class WelcomeScreen extends StatelessWidget {
                 description: 'Find jobs and manage your service business',
                 icon: Icons.work,
                 color: Colors.blue,
-                onTap: () => context.go('/professional'),
+                onTap: () => context.go(
+                  '/login',
+                  extra: {'userType': UserType.professional.name},
+                ),
               ),
               const SizedBox(height: 24),
               _RoleCard(
@@ -40,7 +56,10 @@ class WelcomeScreen extends StatelessWidget {
                 description: 'Request services and manage your home',
                 icon: Icons.home,
                 color: Colors.pink,
-                onTap: () => context.go('/homeowner'),
+                onTap: () => context.go(
+                  '/login',
+                  extra: {'userType': UserType.homeowner.name},
+                ),
               ),
             ],
           ),
