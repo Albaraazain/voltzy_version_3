@@ -45,3 +45,8 @@ app.*.map.json
 /android/app/release
 .aider*
 .env
+
+.node_modules/
+
+node_modules/*
+!node_modules/@react-native-community/cli-platform-android
