@@ -1,31 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:voltzy_version_3/core/config/app_theme.dart';
-import 'package:voltzy_version_3/core/navigation/app_router.dart';
-import 'package:voltzy_version_3/core/providers/auth_provider.dart';
-import 'package:voltzy_version_3/core/repositories/auth_repository.dart';
-import 'package:voltzy_version_3/core/widgets/auth_error_boundary.dart';
+import 'core/navigation/app_router.dart' as router;
+import 'core/providers/auth_provider.dart';
 
 class App extends ConsumerWidget {
   const App({super.key});
-  
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final router = ref.watch(appRouterProvider);
-    final authState = ref.watch(authProvider);
-    final isProfessional = authState.userType == UserType.professional;
-    final theme = ref.watch(
-        isProfessional ? professionalThemeProvider : homeownerThemeProvider);
-
-    return AuthErrorBoundary(
-      child: MaterialApp.router(
-        title: 'Voltzy',
-        theme: theme,
-        routerConfig: router,
-        debugShowCheckedModeBanner: false,
+    // Watch the auth state for changes
+    ref.watch(authProvider);
+    
+    return MaterialApp.router(
+      title: 'Voltzy',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        useMaterial3: true,
       ),
+      routerConfig: ref.watch(router.routerProvider),
     );
   }
 }
