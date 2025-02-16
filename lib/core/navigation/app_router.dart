@@ -70,39 +70,90 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       developer.log(
           'Router state - isLoggedIn: $isLoggedIn, isAuthRoute: $isAuthRoute, isWelcomeRoute: $isWelcomeRoute, isProfessional: $isProfessional');
 
+      developer.log('Auth details - '
+          'User: ${authState.user?.email ?? 'null'}, '
+          'UserType: ${authState.userType?.name ?? 'null'}, '
+          'Current path: ${state.uri.path}');
+
+      // Not logged in - only allow welcome and auth routes
       if (!isLoggedIn) {
-        // If not logged in and trying to access protected routes, go to welcome screen
-        if (!isAuthRoute && !isWelcomeRoute) {
-          developer.log('Redirecting to welcome screen - not logged in');
+        developer.log('🔒 Not logged in');
+        if (isWelcomeRoute || isAuthRoute) {
+          developer.log('✅ Allowing access to welcome/auth screen');
+          return null;
+        }
+        developer.log('🔄 Redirecting to welcome screen');
+        return '/';
+      }
+
+      // Logged in but user type not determined yet
+      if (authState.userType == null) {
+        if (authState.isLoading) {
+          developer.log('⏳ User type loading in progress');
+          if (isWelcomeRoute) {
+            developer.log('✅ Showing welcome screen while loading user type');
+            return null;
+          }
+          developer.log('🔄 Redirecting to welcome screen while loading user type');
           return '/';
         }
-        // Allow access to welcome and auth routes
+        
+        // If loading is complete but userType is still null, show error
+        developer.log('⚠️ User type could not be determined');
+        if (isWelcomeRoute) {
+          developer.log('✅ Showing welcome screen with error');
+          return null;
+        }
+        developer.log('🔄 Redirecting to welcome screen with error');
+        return '/';
+      }
+
+      // Fully authenticated with user type
+      if (authState.userType != null) {
+        final basePath = isProfessional ? '/professional' : '/homeowner';
+        developer.log('👤 User authenticated - Base path: $basePath');
+        
+        // If user is on welcome/auth route, redirect to their home
+        if (isWelcomeRoute || isAuthRoute) {
+          developer.log('🔄 User on welcome/auth route - Redirecting to home');
+          return basePath;
+        }
+
+        // If user is trying to access wrong type of route, redirect
+        if (isProfessional && !state.uri.path.startsWith('/professional')) {
+          developer.log('🔄 Professional accessing non-professional route - Redirecting');
+          return basePath;
+        }
+        if (!isProfessional && !state.uri.path.startsWith('/homeowner')) {
+          developer.log('🔄 Homeowner accessing non-homeowner route - Redirecting');
+          return basePath;
+        }
+
+        // If user is already on their home route, allow access
+        if (state.uri.path == basePath) {
+          developer.log('✅ User is on their home route');
+          return null;
+        }
+
+        // If user is on a subroute of their home, allow access
+        if (state.uri.path.startsWith(basePath)) {
+          developer.log('✅ User is on a subroute of their home');
+          return null;
+        }
+
+        // Fallback - redirect to home
+        developer.log('🔄 Fallback - Redirecting to home');
+        return basePath;
+      }
+
+      // Fallback case
+      developer.log('⚠️ Fallback case - Not logged in or user type not determined');
+      if (isWelcomeRoute) {
+        developer.log('✅ Allowing access to welcome screen');
         return null;
       }
-
-      // If logged in and on auth/welcome routes, redirect to appropriate dashboard
-      // Only redirect from welcome route, not auth routes
-      if (isWelcomeRoute) {
-        final destination = isProfessional ? '/professional' : '/homeowner';
-        developer.log('Redirecting to dashboard: $destination');
-        return destination;
-      }
-
-      // If logged in and accessing the wrong type of routes
-      if (isProfessional && !state.uri.path.startsWith('/professional')) {
-        developer.log('Redirecting professional to professional dashboard');
-        return '/professional';
-      }
-
-      if (!isProfessional &&
-          !state.uri.path.startsWith('/homeowner') &&
-          !isAuthRoute) {
-        developer.log('Redirecting homeowner to homeowner dashboard');
-        return '/homeowner';
-      }
-
-      developer.log('No redirect needed');
-      return null;
+      developer.log('🔄 Redirecting to welcome screen');
+      return '/';
     },
     routes: [
       // Welcome Route (Initial Route)
@@ -133,7 +184,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             orElse: () => UserType.homeowner,
           );
           developer.log('Register route - User type: $userType');
-          return SignupScreen(userType: userType);
+          return const SignupScreen();
         },
       ),
 
