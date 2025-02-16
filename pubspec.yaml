@@ -58,8 +58,11 @@ dependencies:
   flashy_tab_bar2: ^0.0.10
   lucide_icons: ^0.257.0
 
-  # Supabase Flutter dependency
-  supabase_flutter: ^2.3.4
+  # Firebase dependencies
+  firebase_core: ^2.24.2
+  firebase_auth: ^4.15.3
+  cloud_firestore: ^4.13.6
+  firebase_storage: ^11.5.6
 
 dev_dependencies:
   flutter_test:
