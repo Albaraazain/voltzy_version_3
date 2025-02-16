@@ -5,6 +5,7 @@ import 'package:voltzy_version_3/core/config/app_theme.dart';
 import 'package:voltzy_version_3/core/navigation/app_router.dart';
 import 'package:voltzy_version_3/core/providers/auth_provider.dart';
 import 'package:voltzy_version_3/core/repositories/auth_repository.dart';
+import 'package:voltzy_version_3/core/widgets/auth_error_boundary.dart';
 
 class App extends ConsumerWidget {
   const App({super.key});
@@ -18,15 +19,13 @@ class App extends ConsumerWidget {
     final theme = ref.watch(
         isProfessional ? professionalThemeProvider : homeownerThemeProvider);
 
-    return MaterialApp.router(
-      title: 'Voltzy',
-      theme: theme,
-      routerConfig: router,  // Only use this line
-      debugShowCheckedModeBanner: false,
-      // Remove these lines:
-      // routeInformationParser: router.routeInformationParser,
-      // routerDelegate: router.routerDelegate,
-      // routeInformationProvider: router.routeInformationProvider,
+    return AuthErrorBoundary(
+      child: MaterialApp.router(
+        title: 'Voltzy',
+        theme: theme,
+        routerConfig: router,
+        debugShowCheckedModeBanner: false,
+      ),
     );
   }
 }
