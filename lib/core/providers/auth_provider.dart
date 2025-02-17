@@ -74,8 +74,19 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   void checkAuth() {
-    // TODO: Implement auth state check
-    state = state.copyWith(status: AuthStatus.unauthenticated);
+    // In development mode, start as unauthenticated
+    state = state.copyWith(
+      status: AuthStatus.unauthenticated,
+      userId: null,
+    );
+  }
+
+  // Development helper method
+  void autoAuthenticate() {
+    state = state.copyWith(
+      status: AuthStatus.authenticated,
+      userId: 'dev-user-id',
+    );
   }
 }
 
