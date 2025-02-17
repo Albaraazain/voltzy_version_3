@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "819067722029",
+    "firebase_url": "https://voltzy-3c564-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "voltzy-3c564",
+    "storage_bucket": "voltzy-3c564.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:819067722029:android:658fdb99c7fce69d3adba4",
+        "android_client_info": {
+          "package_name": "com.example.voltz_firebase"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDKdGczebaxw6-Wqc4BAyePoVPfDAjvRtc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:819067722029:android:bd9c866130ca42043adba4",
+        "android_client_info": {
+          "package_name": "com.example.voltzy_version_3"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDKdGczebaxw6-Wqc4BAyePoVPfDAjvRtc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
