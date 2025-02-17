@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 enum AuthStatus {
   initial,
@@ -39,15 +40,24 @@ class AuthState {
 class AuthNotifier extends StateNotifier<AuthState> {
   AuthNotifier() : super(AuthState.initial());
 
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
   Future<void> signIn() async {
     try {
       state = state.copyWith(status: AuthStatus.loading);
-      // TODO: Implement actual authentication
-      await Future.delayed(const Duration(seconds: 1));
-      state = state.copyWith(
-        status: AuthStatus.authenticated,
-        userId: 'test-user-id',
-      );
+      
+      // Sign in anonymously to maintain the same UX flow
+      final UserCredential userCredential = await _auth.signInAnonymously();
+      final User? user = userCredential.user;
+
+      if (user != null) {
+        state = state.copyWith(
+          status: AuthStatus.authenticated,
+          userId: user.uid,
+        );
+      } else {
+        throw Exception('Failed to sign in anonymously');
+      }
     } catch (e) {
       state = state.copyWith(
         status: AuthStatus.error,
@@ -59,8 +69,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
   Future<void> signOut() async {
     try {
       state = state.copyWith(status: AuthStatus.loading);
-      // TODO: Implement actual sign out
-      await Future.delayed(const Duration(milliseconds: 500));
+      await _auth.signOut();
       state = state.copyWith(
         status: AuthStatus.unauthenticated,
         userId: null,
@@ -74,19 +83,19 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   void checkAuth() {
-    // In development mode, start as unauthenticated
-    state = state.copyWith(
-      status: AuthStatus.unauthenticated,
-      userId: null,
-    );
-  }
-
-  // Development helper method
-  void autoAuthenticate() {
-    state = state.copyWith(
-      status: AuthStatus.authenticated,
-      userId: 'dev-user-id',
-    );
+    final User? currentUser = _auth.currentUser;
+    
+    if (currentUser != null) {
+      state = state.copyWith(
+        status: AuthStatus.authenticated,
+        userId: currentUser.uid,
+      );
+    } else {
+      state = state.copyWith(
+        status: AuthStatus.unauthenticated,
+        userId: null,
+      );
+    }
   }
 }
 
