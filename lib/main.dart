@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:voltzy_version_3/features/welcome/screens/welcome_screen.dart';
+import 'firebase_options.dart';
 import 'app.dart';
 import 'dart:developer' as developer;
 
@@ -14,8 +15,10 @@ Future<void> main() async {
   developer.log('Initializing Firebase...');
 
   try {
-    // Initialize Firebase
-    await Firebase.initializeApp();
+    // Initialize Firebase with options
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
     developer.log('Firebase initialized successfully');
 
     // Set up auth state listener
