@@ -1,9 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../repositories/firebase_repository.dart';
 
 enum AuthStatus {
   initial,
+  loading,
   authenticated,
   unauthenticated,
   error,
@@ -11,17 +10,13 @@ enum AuthStatus {
 
 class AuthState {
   final AuthStatus status;
-  final User? user;
+  final String? userId;
   final String? error;
-  final String? userType;
-  final bool isLoading;
 
   const AuthState({
     required this.status,
-    this.user,
+    this.userId,
     this.error,
-    this.userType,
-    this.isLoading = false,
   });
 
   factory AuthState.initial() {
@@ -30,106 +25,60 @@ class AuthState {
 
   AuthState copyWith({
     AuthStatus? status,
-    User? user,
+    String? userId,
     String? error,
-    String? userType,
-    bool? isLoading,
   }) {
     return AuthState(
       status: status ?? this.status,
-      user: user ?? this.user,
+      userId: userId ?? this.userId,
       error: error ?? this.error,
-      userType: userType ?? this.userType,
-      isLoading: isLoading ?? this.isLoading,
     );
   }
 }
 
 class AuthNotifier extends StateNotifier<AuthState> {
-  final FirebaseRepository _repository;
+  AuthNotifier() : super(AuthState.initial());
 
-  AuthNotifier(this._repository) : super(AuthState.initial()) {
-    // Listen to auth state changes
-    _repository.authStateChanges.listen((User? user) {
-      if (user != null) {
-        state = AuthState(
-          status: AuthStatus.authenticated,
-          user: user,
-        );
-      } else {
-        state = const AuthState(
-          status: AuthStatus.unauthenticated,
-        );
-      }
-    });
-  }
-
-  Future<void> signIn({required String email, required String password}) async {
+  Future<void> signIn() async {
     try {
-      state = state.copyWith(isLoading: true);
-      await _repository.signInWithEmailAndPassword(
-        email: email,
-        password: password,
+      state = state.copyWith(status: AuthStatus.loading);
+      // TODO: Implement actual authentication
+      await Future.delayed(const Duration(seconds: 1));
+      state = state.copyWith(
+        status: AuthStatus.authenticated,
+        userId: 'test-user-id',
       );
-    } catch (e) {
-      state = AuthState(
-        status: AuthStatus.error,
-        error: e.toString(),
-      );
-    }
-  }
-
-  Future<void> signUp({
-    required String email, 
-    required String password,
-    required String userType,
-  }) async {
-    try {
-      state = state.copyWith(isLoading: true);
-      final credential = await _repository.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      
-      // Store additional user data in Firestore
-      if (credential.user != null) {
-        await _repository.setUserData(credential.user!.uid, {
-          'email': email,
-          'createdAt': DateTime.now().toIso8601String(),
-          'userType': userType,
-        });
-      }
     } catch (e) {
       state = state.copyWith(
         status: AuthStatus.error,
         error: e.toString(),
-        isLoading: false,
       );
     }
   }
 
   Future<void> signOut() async {
     try {
-      await _repository.signOut();
+      state = state.copyWith(status: AuthStatus.loading);
+      // TODO: Implement actual sign out
+      await Future.delayed(const Duration(milliseconds: 500));
+      state = state.copyWith(
+        status: AuthStatus.unauthenticated,
+        userId: null,
+      );
     } catch (e) {
       state = state.copyWith(
         status: AuthStatus.error,
         error: e.toString(),
-        isLoading: false,
       );
     }
+  }
+
+  void checkAuth() {
+    // TODO: Implement auth state check
+    state = state.copyWith(status: AuthStatus.unauthenticated);
   }
 }
 
 final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
-  final repository = ref.watch(firebaseRepositoryProvider);
-  return AuthNotifier(repository);
-});
-
-final userProvider = Provider<User?>((ref) {
-  return ref.watch(authProvider).user;
-});
-
-final isAuthenticatedProvider = Provider<bool>((ref) {
-  return ref.watch(authProvider).status == AuthStatus.authenticated;
+  return AuthNotifier();
 });
