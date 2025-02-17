@@ -1,10 +1,10 @@
 class FeatureFlags {
   // Core Features
-  static const useFirebaseAuth = true;
-  static const useFirebaseProfiles = true;
+  static const useFirebaseAuth = false;
+  static const useFirebaseProfiles = false;
 
   // Service Features
-  static const useFirebaseServiceCategories = true;
+  static const useFirebaseServiceCategories = false;
   static const useFirebaseJobs = false;
 
   // Advanced Features
