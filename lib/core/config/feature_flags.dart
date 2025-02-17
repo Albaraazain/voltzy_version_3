@@ -1,18 +1,18 @@
 class FeatureFlags {
   // Core Features
-  static const useSupabaseAuth = true;
-  static const useSupabaseProfiles = true;
+  static const useFirebaseAuth = true;
+  static const useFirebaseProfiles = true;
 
   // Service Features
-  static const useSupabaseServiceCategories = false;
-  static const useSupabaseJobs = false;
+  static const useFirebaseServiceCategories = true;
+  static const useFirebaseJobs = false;
 
   // Advanced Features
-  static const useSupabaseNotifications = false;
-  static const useSupabaseChat = false;
-  static const useSupabasePayments = false;
+  static const useFirebaseNotifications = false;
+  static const useFirebaseChat = false;
+  static const useFirebasePayments = false;
 
   // Development Features
-  static const logSupabaseErrors = true;
-  static const useSupabaseErrorLogging = true;
+  static const logFirebaseErrors = true;
+  static const useFirebaseErrorLogging = true;
 }
