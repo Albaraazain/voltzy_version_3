@@ -35,23 +35,39 @@ final routerProvider = Provider<GoRouter>((ref) {
     redirect: (context, state) {
       final isAuthenticated = authState.status == AuthStatus.authenticated;
       final isInitializing = authState.status == AuthStatus.initial;
+      final isTemporaryAuth = isAuthenticated && 
+          authState.userId != null && 
+          authState.userId!.startsWith('temp_');
       
       // Don't redirect while initializing
       if (isInitializing) return null;
 
       final isWelcomeRoute = state.uri.path == '/welcome';
       final isLoginRoute = state.uri.path == '/login';
+      final isSignupRoute = state.uri.path == '/signup';
       
       // List of public routes that don't require authentication
-      final isPublicRoute = isWelcomeRoute || isLoginRoute;
+      final isPublicRoute = isWelcomeRoute || isLoginRoute || isSignupRoute;
 
-      if (!isAuthenticated) {
-        // Redirect to welcome if trying to access authenticated routes
-        return isPublicRoute ? null : '/welcome';
+      // If using temporary auth, keep user on public routes
+      if (isTemporaryAuth) {
+        // If on a private route, redirect to login
+        if (!isPublicRoute) {
+          return '/login';
+        }
+        return null;
       }
 
-      // Handle authenticated user trying to access public routes
-      if (isAuthenticated && isPublicRoute) {
+      if (!isAuthenticated) {
+        // Allow access to public routes when not authenticated
+        if (isPublicRoute) return null;
+        
+        // Redirect to welcome for other routes
+        return '/welcome';
+      }
+
+      // If properly authenticated, redirect from public routes to appropriate dashboard
+      if (isAuthenticated && !isTemporaryAuth && isPublicRoute) {
         final userType = ref.read(userTypeNotifierProvider);
         return userType == UserType.professional.name
             ? '/professional/dashboard'
