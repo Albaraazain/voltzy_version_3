@@ -13,6 +13,19 @@ import 'package:voltzy_version_3/features/homeowner/screens/job_details_screen.d
 import 'package:voltzy_version_3/core/providers/auth_provider.dart';
 import 'package:voltzy_version_3/features/auth/domain/models/user_type.dart';
 import 'package:voltzy_version_3/features/auth/providers/user_type_provider.dart';
+import 'package:voltzy_version_3/features/auth/screens/login_screen.dart';
+import 'package:voltzy_version_3/features/auth/screens/signup_screen.dart';
+import 'package:voltzy_version_3/core/navigation/app_shell.dart';
+import 'package:voltzy_version_3/features/homeowner/screens/profile_screen.dart';
+import 'package:voltzy_version_3/features/homeowner/screens/profile/settings_screen.dart';
+import 'package:voltzy_version_3/features/homeowner/screens/profile/privacy_screen.dart';
+import 'package:voltzy_version_3/features/homeowner/screens/profile/personal_info_screen.dart';
+import 'package:voltzy_version_3/features/homeowner/screens/profile/payment_methods_screen.dart';
+import 'package:voltzy_version_3/features/homeowner/screens/profile/notifications_screen.dart';
+import 'package:voltzy_version_3/features/homeowner/screens/profile/addresses_screen.dart';
+
+import '../../features/homeowner/screens/profile/personal_info_screen.dart';
+import '../../features/homeowner/screens/profile/settings_screen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authProvider);
@@ -29,20 +42,33 @@ final routerProvider = Provider<GoRouter>((ref) {
       final isWelcomeRoute = state.uri.path == '/welcome';
       final isLoginRoute = state.uri.path == '/login';
       
-      // If not authenticated, only allow welcome and login routes
+      // List of public routes that don't require authentication
+      final isPublicRoute = isWelcomeRoute || isLoginRoute;
+
       if (!isAuthenticated) {
-        if (!isWelcomeRoute && !isLoginRoute) {
-          return '/welcome';
-        }
-        return null;
+        // Redirect to welcome if trying to access authenticated routes
+        return isPublicRoute ? null : '/welcome';
       }
 
-      // If authenticated, don't allow welcome or login routes
-      if (isAuthenticated && (isWelcomeRoute || isLoginRoute)) {
+      // Handle authenticated user trying to access public routes
+      if (isAuthenticated && isPublicRoute) {
         final userType = ref.read(userTypeNotifierProvider);
         return userType == UserType.professional.name
             ? '/professional/dashboard'
-            : '/homeowner/home';
+            : '/homeowner';
+      }
+
+      // Allow authenticated users to access their routes
+      final userType = ref.read(userTypeNotifierProvider);
+      final path = state.uri.path;
+      final isCorrectUserPath = userType == UserType.professional.name
+          ? path.startsWith('/professional')
+          : path.startsWith('/homeowner');
+
+      if (!isCorrectUserPath) {
+        return userType == UserType.professional.name
+            ? '/professional/dashboard'
+            : '/homeowner';
       }
 
       return null;
@@ -60,15 +86,20 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/login',
-        redirect: (context, state) {
+        builder: (context, state) {
           final Map<String, dynamic>? extra = state.extra as Map<String, dynamic>?;
           final userType = extra?['userType'] as String?;
-          if (userType == UserType.professional.name) {
-            return '/professional/dashboard';
-          } else if (userType == UserType.homeowner.name) {
-            return '/homeowner/home';
-          }
-          return '/welcome';
+          if (userType == null) return const WelcomeScreen();
+          return LoginScreen(userType: userType);
+        },
+      ),
+      GoRoute(
+        path: '/signup',
+        builder: (context, state) {
+          final Map<String, dynamic>? extra = state.extra as Map<String, dynamic>?;
+          final userType = extra?['userType'] as String?;
+          if (userType == null) return const WelcomeScreen();
+          return SignupScreen(userType: userType);
         },
       ),
 
@@ -94,19 +125,85 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const CompletedJobsScreen(),
       ),
 
-      // Homeowner Routes
-      GoRoute(
-        path: '/homeowner/home',
-        builder: (context, state) => const HomeScreen(),
+      // Homeowner Routes with Shell
+      ShellRoute(
+        builder: (context, state, child) {
+          final userType = ref.read(userTypeNotifierProvider);
+          return AppShell(
+            child: child,
+            currentPath: state.uri.path,
+            isProfessional: userType == UserType.professional.name,
+          );
+        },
+        routes: [
+          // Dashboard
+          GoRoute(
+            path: '/homeowner',
+            builder: (context, state) => const HomeScreen(),
+          ),
+          // Jobs
+          GoRoute(
+            path: '/homeowner/active-jobs',
+            builder: (context, state) => const ActiveJobsScreen(),
+          ),
+          // Profile
+          // Profile Section
+          GoRoute(
+            path: '/homeowner/profile',
+            builder: (context, state) => const HomeownerProfileScreen(),
+          ),
+          GoRoute(
+            path: '/homeowner/profile/settings',
+            builder: (context, state) => const HomeownerSettingsScreen(),
+          ),
+          GoRoute(
+            path: '/homeowner/profile/personal-info',
+            builder: (context, state) => const HomeownerPersonalInfoScreen(),
+          ),
+          GoRoute(
+            path: '/homeowner/profile/privacy',
+            builder: (context, state) => const HomeownerPrivacyScreen(),
+          ),
+          GoRoute(
+            path: '/homeowner/profile/payment-methods',
+            builder: (context, state) => const HomeownerPaymentMethodsScreen(),
+          ),
+          GoRoute(
+            path: '/homeowner/profile/notifications',
+            builder: (context, state) => const HomeownerNotificationsScreen(),
+          ),
+          GoRoute(
+            path: '/homeowner/profile/addresses',
+            builder: (context, state) => const HomeownerAddressesScreen(),
+          ),
+        ],
       ),
+      // Additional Homeowner Routes (outside shell)
       GoRoute(
-        path: '/homeowner/jobs/active',
-        builder: (context, state) => const ActiveJobsScreen(),
+        path: '/homeowner/category/:categoryId',
+        builder: (context, state) => Scaffold(
+          appBar: AppBar(title: const Text('Category Services')),
+          body: Center(
+            child: Text('Services for category ${state.pathParameters['categoryId']} - Coming Soon'),
+          ),
+        ),
       ),
       GoRoute(
         path: '/homeowner/jobs/:jobId',
         builder: (context, state) => JobDetailsScreen(
           jobId: state.pathParameters['jobId']!,
+        ),
+      ),
+      GoRoute(
+        path: '/homeowner/profile/settings',
+        builder: (context, state) => const Scaffold(
+          body: Center(child: Text('Settings Screen - Coming Soon')),
+        ),
+      ),
+      GoRoute(
+        path: '/homeowner/profile/help',
+        builder: (context, state) => const Scaffold(
+          body: Center(child: Text('Help & Support - Coming Soon')),
         ),
       ),
     ],
