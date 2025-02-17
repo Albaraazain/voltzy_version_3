@@ -14,8 +14,16 @@ Future<void> main() async {
 
   developer.log('Starting app in development mode...');
 
+  // Initialize Firebase
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  // Enable offline persistence for Firestore
+  await FirebaseFirestore.instance.enablePersistence();
+
   runApp(
-    ProviderScope(
+    const ProviderScope(
       child: App(),
     ),
   );
