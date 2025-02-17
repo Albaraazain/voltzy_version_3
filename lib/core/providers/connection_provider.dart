@@ -1,58 +1,96 @@
+import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:logger/logger.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../utils/logger.dart';
 
-final _logger = Logger(
-  printer: PrettyPrinter(
-    methodCount: 0,
-    errorMethodCount: 5,
-    lineLength: 50,
-    colors: true,
-    printEmojis: true,
-  ),
-);
+enum ConnectionStatus {
+  connected,
+  disconnected,
+  waiting,
+}
 
 class ConnectionState {
-  final bool isConnected;
-  final bool isInitialized;
+  final ConnectionStatus status;
+  final String? error;
 
   const ConnectionState({
-    this.isConnected = false,
-    this.isInitialized = false,
+    required this.status,
+    this.error,
   });
 
-  ConnectionState copyWith({
-    bool? isConnected,
-    bool? isInitialized,
-  }) {
-    return ConnectionState(
-      isConnected: isConnected ?? this.isConnected,
-      isInitialized: isInitialized ?? this.isInitialized,
-    );
+  factory ConnectionState.initial() {
+    return const ConnectionState(status: ConnectionStatus.waiting);
   }
 }
 
 class ConnectionNotifier extends StateNotifier<ConnectionState> {
-  final SupabaseClient _supabase;
+  final Connectivity _connectivity;
+  StreamSubscription? _subscription;
+  Timer? _testTimer;
 
-  ConnectionNotifier(this._supabase) : super(const ConnectionState()) {
+  ConnectionNotifier(this._connectivity) : super(ConnectionState.initial()) {
     _init();
   }
 
   void _init() {
-    _logger.i('ConnectionNotifier: Initializing connection state');
-    _supabase.onAuthStateChange.listen((event) {
-      _logger.i('ConnectionNotifier: Auth state change detected');
-      state = state.copyWith(isInitialized: true);
-    });
+    // Listen to connectivity changes
+    _subscription =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
 
-    _supabase.onConnectionStateChange.listen((event) {
-      _logger.i('ConnectionNotifier: Connection state change detected - ${event.isConnected}');
-      state = state.copyWith(isConnected: event.isConnected);
-    });
+    // Initial check
+    _checkConnection();
+
+    // Set up periodic connection test
+    _testTimer = Timer.periodic(
+        const Duration(minutes: 1), (_) => _testFirebaseConnection());
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    if (result == ConnectivityResult.none) {
+      state = const ConnectionState(status: ConnectionStatus.disconnected);
+    } else {
+      _testFirebaseConnection();
+    }
+  }
+
+  Future<void> _checkConnection() async {
+    final result = await _connectivity.checkConnectivity();
+    await _updateConnectionStatus(result);
+  }
+
+  Future<void> _testFirebaseConnection() async {
+    try {
+      // Try to make a simple request to Firestore
+      await FirebaseFirestore.instance
+          .collection('_connectivity_test')
+          .limit(1)
+          .get();
+
+      state = const ConnectionState(status: ConnectionStatus.connected);
+    } catch (e) {
+      state = ConnectionState(
+        status: ConnectionStatus.disconnected,
+        error: e.toString(),
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _subscription?.cancel();
+    _testTimer?.cancel();
+    super.dispose();
   }
 }
 
-final connectionProvider = StateNotifierProvider<ConnectionNotifier, ConnectionState>((ref) {
-  return ConnectionNotifier(ref.watch(supabaseProvider));
+/// Provider for network connectivity state
+final connectionProvider =
+    StateNotifierProvider<ConnectionNotifier, ConnectionState>((ref) {
+  return ConnectionNotifier(Connectivity());
+});
+
+final isConnectedProvider = Provider<bool>((ref) {
+  return ref.watch(connectionProvider).status == ConnectionStatus.connected;
 });
