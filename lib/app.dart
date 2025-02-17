@@ -3,13 +3,27 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'core/navigation/app_router.dart' as router;
 import 'core/providers/auth_provider.dart';
 
-class App extends ConsumerWidget {
+class App extends ConsumerStatefulWidget {
   const App({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    // Watch the auth state for changes
-    ref.watch(authProvider);
+  ConsumerState<App> createState() => _AppState();
+}
+
+class _AppState extends ConsumerState<App> {
+  @override
+  void initState() {
+    super.initState();
+    // Initialize auth state
+    Future.microtask(() {
+      ref.read(authProvider.notifier).checkAuth();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Watch auth state for changes
+    final authState = ref.watch(authProvider);
     
     return MaterialApp.router(
       title: 'Voltzy',
