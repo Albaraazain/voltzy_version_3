@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../jobs/models/job.dart';
+import '../../../core/utils/json_converters.dart';
 
 part 'homeowner_job.freezed.dart';
 part 'homeowner_job.g.dart';
@@ -7,7 +8,7 @@ part 'homeowner_job.g.dart';
 @freezed
 class HomeownerJob with _$HomeownerJob {
   const factory HomeownerJob({
-    required Job job,
+    @JobConverter() required Job job,
     required HomeownerJobStatus status,
     required DateTime requestedTime,
     required List<String> images,

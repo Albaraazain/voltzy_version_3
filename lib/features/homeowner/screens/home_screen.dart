@@ -4,7 +4,6 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../models/service_category_card.dart';
 import '../widgets/location_selector_widget.dart';
 import '../providers/service_category_provider.dart';
-import 'category_services_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/providers/auth_provider.dart';
 
@@ -24,155 +23,222 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header section
-            Padding(
-              padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(
-                    icon: const Icon(LucideIcons.menu),
-                    onPressed: _showMenu,
-                  ),
-                  const LocationSelectorWidget(),
-                ],
-              ),
-            ),
-
-            // Welcome text
-            const Padding(
-              padding: EdgeInsets.fromLTRB(24, 24, 24, 16),
-              child: Text(
-                'What service do you need?',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-
-            // Difficulty selector
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                children: [
-                  'Emergency',
-                  'Regular',
-                  'Maintenance',
-                ].map((difficulty) {
-                  final isSelected = _selectedDifficulty == difficulty;
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: ChoiceChip(
-                      label: Text(difficulty),
-                      selected: isSelected,
-                      onSelected: (selected) {
-                        if (selected) {
-                          setState(() => _selectedDifficulty = difficulty);
-                        }
-                      },
+        child: categoriesState.when(
+          data: (categories) => RefreshIndicator(
+            onRefresh: () async {
+              ref.read(serviceCategoryProvider.notifier).loadCategories();
+            },
+            child: CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildHeader(),
+                        const SizedBox(height: 24),
+                        Text(
+                          'Welcome Back!',
+                          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'What service do you need today?',
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                color: Colors.grey[600],
+                              ),
+                        ),
+                      ],
                     ),
-                  );
-                }).toList(),
-              ),
-            ),
-
-            // Categories grid
-            Expanded(
-              child: categoriesState.when(
-                data: (categories) => GridView.builder(
-                  padding: const EdgeInsets.all(16),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: 0.85,
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
-                  ),
-                  itemCount: categories.length,
-                  itemBuilder: (context, index) {
-                    final category = categories[index];
-                    return _buildCategoryCard(category);
-                  },
-                ),
-                loading: () => const Center(
-                  child: CircularProgressIndicator(),
-                ),
-                error: (error, stack) => Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        'Error loading categories',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      const SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: () => ref
-                            .read(serviceCategoryProvider.notifier)
-                            .loadCategories(),
-                        child: const Text('Retry'),
-                      ),
-                    ],
                   ),
                 ),
-              ),
+                const SliverToBoxAdapter(
+                  child: LocationSelectorWidget(),
+                ),
+                SliverPadding(
+                  padding: const EdgeInsets.all(24),
+                  sliver: SliverGrid(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 16,
+                      crossAxisSpacing: 16,
+                      childAspectRatio: 0.85,
+                    ),
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        final category = categories[index];
+                        return _buildServiceCard(category);
+                      },
+                      childCount: categories.length,
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (error, stack) => Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'Error loading categories',
+                  style: TextStyle(fontSize: 16),
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () =>
+                      ref.read(serviceCategoryProvider.notifier).loadCategories(),
+                  child: const Text('Retry'),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildCategoryCard(ServiceCategoryCard category) {
-    return InkWell(
-      onTap: () => context.push('/homeowner/category/${category.id}'),
-      child: Card(
-        elevation: 2,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
+  Widget _buildHeader() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            InkWell(
+              onTap: _showMenu,
+              borderRadius: BorderRadius.circular(8),
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  children: [
+                    Container(
+                      width: 24,
+                      height: 2,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade800,
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Container(
+                      width: 24,
+                      height: 2,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade800,
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Container(
+                      width: 24,
+                      height: 2,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade800,
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Icon(
-                LucideIcons.wrench, // TODO: Map iconName to actual icons
-                size: 32,
-                color: category.accentColor,
-              ),
-              const Spacer(),
-              Text(
-                category.name,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                category.description,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey[600],
-                ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                '\$${category.minPrice.toStringAsFixed(0)} - \$${category.maxPrice.toStringAsFixed(0)}',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey[600],
-                ),
-              ),
-            ],
+        const SizedBox(height: 16),
+        const Text(
+          'Home Services of any Type',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
           ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildServiceCard(ServiceCategoryCard category) {
+    String imagePath = 'assets/images/';
+    final name = category.name.toLowerCase().replaceAll(' services', '');
+    
+    switch (name) {
+      case 'electrical':
+        imagePath += 'electrical_services.png';
+        break;
+      case 'plumbing':
+        imagePath += 'plumbing_services.png';
+        break;
+      case 'hvac':
+        imagePath += 'hvac_services.png';
+        break;
+      case 'landscaping':
+        imagePath += 'landscaping_services.png';
+        break;
+      case 'security':
+        imagePath += 'security_services.png';
+        break;
+      case 'smart home':
+        imagePath += 'smart_home_services.png';
+        break;
+      case 'home cleaning':
+      case 'cleaning':
+        imagePath += 'home_cleaning_services.png';
+        break;
+      case 'carpentry':
+        imagePath += 'carbentry_services.png';
+        break;
+      case 'painting':
+        imagePath += 'painting_services.png';
+        break;
+      case 'solar':
+        imagePath += 'solar_services.png';
+        break;
+      case 'appliance':
+      case 'appliance repair':
+        imagePath += 'appliance_repair_services.png';
+        break;
+      default:
+        imagePath += 'default_service.png';
+    }
+
+    return GestureDetector(
+      onTap: () => context.push('/homeowner/category/${category.id}'),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(32),
+          image: DecorationImage(
+            image: AssetImage(imagePath),
+            fit: BoxFit.cover,
+          ),
+        ),
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.4),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: Colors.white.withOpacity(0.2),
+                  width: 0.5,
+                ),
+              ),
+              child: Text(
+                category.name.replaceAll(' Services', ''),
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                  height: 1.2,
+                  color: Colors.white,
+                  letterSpacing: 0.3,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -201,7 +267,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               color: Colors.transparent,
               child: Stack(
                 children: [
-                  // Semi-transparent overlay
                   GestureDetector(
                     onTap: () => Navigator.pop(context),
                     child: Container(
@@ -210,7 +275,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       color: Colors.black.withOpacity(0.3),
                     ),
                   ),
-                  // Menu content
                   Container(
                     width: MediaQuery.of(context).size.width * 0.75,
                     height: MediaQuery.of(context).size.height,
@@ -261,7 +325,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             1,
                             onTap: () {
                               Navigator.pop(context);
-                              // TODO: Navigate to favorites
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Favorites coming soon!'),
+                                ),
+                              );
                             },
                           ),
                           _buildAnimatedMenuItem(

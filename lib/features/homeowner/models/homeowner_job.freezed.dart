@@ -20,6 +20,7 @@ HomeownerJob _$HomeownerJobFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$HomeownerJob {
+  @JobConverter()
   Job get job => throw _privateConstructorUsedError;
   HomeownerJobStatus get status => throw _privateConstructorUsedError;
   DateTime get requestedTime => throw _privateConstructorUsedError;
@@ -46,7 +47,7 @@ abstract class $HomeownerJobCopyWith<$Res> {
       _$HomeownerJobCopyWithImpl<$Res, HomeownerJob>;
   @useResult
   $Res call(
-      {Job job,
+      {@JobConverter() Job job,
       HomeownerJobStatus status,
       DateTime requestedTime,
       List<String> images,
@@ -138,7 +139,7 @@ abstract class _$$HomeownerJobImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {Job job,
+      {@JobConverter() Job job,
       HomeownerJobStatus status,
       DateTime requestedTime,
       List<String> images,
@@ -214,7 +215,7 @@ class __$$HomeownerJobImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$HomeownerJobImpl implements _HomeownerJob {
   const _$HomeownerJobImpl(
-      {required this.job,
+      {@JobConverter() required this.job,
       required this.status,
       required this.requestedTime,
       required final List<String> images,
@@ -228,6 +229,7 @@ class _$HomeownerJobImpl implements _HomeownerJob {
       _$$HomeownerJobImplFromJson(json);
 
   @override
+  @JobConverter()
   final Job job;
   @override
   final HomeownerJobStatus status;
@@ -305,7 +307,7 @@ class _$HomeownerJobImpl implements _HomeownerJob {
 
 abstract class _HomeownerJob implements HomeownerJob {
   const factory _HomeownerJob(
-      {required final Job job,
+      {@JobConverter() required final Job job,
       required final HomeownerJobStatus status,
       required final DateTime requestedTime,
       required final List<String> images,
@@ -318,6 +320,7 @@ abstract class _HomeownerJob implements HomeownerJob {
       _$HomeownerJobImpl.fromJson;
 
   @override
+  @JobConverter()
   Job get job;
   @override
   HomeownerJobStatus get status;

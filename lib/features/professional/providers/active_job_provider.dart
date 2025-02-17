@@ -1,77 +1,80 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../jobs/models/job.dart';
+import '../repositories/professional_job_repository.dart';
 import 'package:flutter/foundation.dart';
 
 part 'active_job_provider.g.dart';
 
 @riverpod
-class ActiveJob extends _$ActiveJob {
+class ActiveJob extends AutoDisposeAsyncNotifier<Job?> {
   @override
-  Stream<Job?> build() async* {
-    try {
-      // Simulate API call
-      await Future.delayed(const Duration(seconds: 1));
+  FutureOr<Job?> build() async {
+    debugPrint('🔄 ActiveJob: Building provider');
+    return _fetchActiveJob();
+  }
 
-      yield Job(
-        id: '1',
-        title: 'Fix Leaking Pipe',
-        description: 'Kitchen sink pipe is leaking',
-        location: const Location(
-          address: '123 Main St',
-          latitude: 37.7749,
-          longitude: -122.4194,
-        ),
-        homeownerId: 'client1',
-        homeownerName: 'John Doe',
-        homeownerPhoneNumber: '+1234567890',
-        stage: JobStage.enRoute,
-        status: JobStatus.inProgress,
-        urgency: JobUrgency.high,
-        createdAt: DateTime.now(),
-        estimatedDuration: const Duration(hours: 2),
-        budget: 150.0,
-      );
-    } catch (e) {
-      // Log the error
-      // Consider using a proper logging mechanism instead of print in production
-      print('Error fetching active job: $e');
-      yield null;
+  Future<Job?> _fetchActiveJob() async {
+    debugPrint('🔍 ActiveJob: Fetching active job');
+    try {
+      final repository = ref.read(professionalJobRepositoryProvider);
+      final job = await repository.getActiveJob();
+      debugPrint('✅ ActiveJob: Fetched job ${job?.id}');
+      return job;
+    } catch (e, stack) {
+      debugPrint('❌ ActiveJob: Error fetching job - $e');
+      throw AsyncError(e, stack);
     }
   }
 
   Future<void> updateStage(JobStage newStage) async {
-    debugPrint('📝 Updating job stage to: $newStage');
-    state = const AsyncValue.loading();
+    debugPrint('🔄 ActiveJob: Updating stage to ${newStage.name}');
+    if (state.isLoading) {
+      debugPrint('⚠️ ActiveJob: Already loading, ignoring update');
+      return;
+    }
 
-    state = await AsyncValue.guard(() async {
+    try {
+      // Keep the current value
       final currentJob = state.value;
       if (currentJob == null) {
-        debugPrint('❌ Cannot update stage: No active job found');
         throw Exception('No active job found');
       }
 
-      debugPrint('✅ Updating job stage from ${currentJob.stage} to $newStage');
-      return currentJob.copyWith(stage: newStage);
-    });
+      // Set loading state while updating
+      state = const AsyncLoading();
 
-    final updatedJob = state.value;
-    debugPrint('🔄 Job stage updated: ${updatedJob?.stage}');
-  }
-}
+      // Create updated job with new stage
+      final updatedJob = currentJob.copyWith(
+        stage: newStage,
+        updatedAt: DateTime.now(),
+      );
 
-@riverpod
-class ActiveJobStage extends _$ActiveJobStage {
-  @override
-  JobStage build() {
-    final jobAsync = ref.watch(activeJobProvider);
-    return jobAsync.when(
-      data: (job) => job?.stage ?? JobStage.enRoute,
-      loading: () => JobStage.enRoute,
-      error: (_, __) => JobStage.enRoute,
-    );
+      // Update state with new job
+      state = AsyncData(updatedJob);
+      debugPrint('✅ ActiveJob: Stage updated successfully');
+    } catch (e, stack) {
+      debugPrint('❌ ActiveJob: Stage update failed - $e');
+      state = AsyncError(e, stack);
+      rethrow;
+    }
   }
 
-  Future<void> updateStage(JobStage newStage) async {
-    await ref.read(activeJobProvider.notifier).updateStage(newStage);
+  Future<void> refresh() async {
+    debugPrint('🔄 ActiveJob: Refreshing job data');
+    if (state.isLoading) {
+      debugPrint('⚠️ ActiveJob: Already loading, ignoring refresh');
+      return;
+    }
+
+    state = const AsyncLoading();
+    try {
+      final job = await _fetchActiveJob();
+      state = AsyncData(job);
+      debugPrint('✅ ActiveJob: Refresh successful');
+    } catch (e, stack) {
+      debugPrint('❌ ActiveJob: Refresh failed - $e');
+      state = AsyncError(e, stack);
+      rethrow;
+    }
   }
 }

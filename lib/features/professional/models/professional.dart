@@ -8,10 +8,17 @@ class Professional with _$Professional {
   const factory Professional({
     required String id,
     required String name,
-    String? profileImageUrl,
+    required String phoneNumber,
+    required String email,
+    required String profileImageUrl,
     required double rating,
     required int completedJobs,
     required double responseRate,
+    required List<String> services,
+    required List<String> certifications,
+    required bool isAvailable,
+    required DateTime createdAt,
+    required DateTime updatedAt,
   }) = _Professional;
 
   factory Professional.fromJson(Map<String, dynamic> json) =>

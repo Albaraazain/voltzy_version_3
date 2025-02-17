@@ -454,6 +454,8 @@ class ProfessionalDashboardScreen extends ConsumerWidget {
 
   IconData _getStageIcon(JobStage stage) {
     switch (stage) {
+      case JobStage.pending:
+        return Icons.pending_outlined;
       case JobStage.quoteCreation:
         return Icons.request_quote_outlined;
       case JobStage.enRoute:
@@ -466,8 +468,6 @@ class ProfessionalDashboardScreen extends ConsumerWidget {
         return Icons.engineering_outlined;
       case JobStage.completion:
         return Icons.check_circle_outline;
-      case JobStage.completed:
-        return Icons.task_alt_outlined;
     }
   }
 

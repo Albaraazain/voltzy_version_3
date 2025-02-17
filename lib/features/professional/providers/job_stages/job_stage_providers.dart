@@ -426,9 +426,10 @@ class InProgressState extends AutoDisposeAsyncNotifier<void> {
       await Future.delayed(const Duration(seconds: 1));
 
       // Update the job stage
-      await ref
+      final result = await ref
           .read(activeJobProvider.notifier)
           .updateStage(JobStage.completion);
+      return result;
 
       state = const AsyncData(null);
     } catch (e, stack) {
@@ -543,7 +544,7 @@ class CompletionState extends AutoDisposeAsyncNotifier<void> {
       debugPrint('📤 CompletionState: Updating job stage to completed');
       await ref
           .read(activeJobProvider.notifier)
-          .updateStage(JobStage.completed);
+          .updateStage(JobStage.completion);
 
       debugPrint('✅ CompletionState: Job finalized successfully');
       state = const AsyncData(null);

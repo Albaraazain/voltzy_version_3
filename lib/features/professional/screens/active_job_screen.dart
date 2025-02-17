@@ -36,14 +36,17 @@ class ActiveJobScreen extends ConsumerWidget {
             print(
                 'ActiveJobScreen: Rendering view for job stage: ${job.stage}');
             return switch (job.stage) {
+              JobStage.pending => const Center(
+                  child: Text('Job is pending approval'),
+                ),
               JobStage.enRoute => EnRouteView(job: job),
               JobStage.atLocation => AtLocationView(job: job),
               JobStage.diagnosis => DiagnosisView(job: job),
               JobStage.quoteCreation => QuoteCreationView(job: job),
               JobStage.inProgress => InProgressView(job: job),
               JobStage.completion => CompletionView(job: job),
-              JobStage.completed => const Center(
-                  child: Text('Job is completed'),
+              _ => const Center(
+                  child: Text('Unknown job stage'),
                 ),
             };
           },

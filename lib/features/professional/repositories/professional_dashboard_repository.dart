@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:voltzy_version_3/core/models/location.dart';
 import '../models/metric.dart';
 import '../models/job_request.dart' as request;
 import '../../../features/jobs/models/job.dart';
@@ -65,7 +66,10 @@ class ProfessionalDashboardRepository {
       status: JobStatus.inProgress,
       urgency: JobUrgency.high,
       createdAt: DateTime.now(),
-      homeownerId: 'client-123',
+      serviceType: 'Circuit Repair',
+      budget: 200.0,
+      estimatedDuration: 120,
+      updatedAt: DateTime.now(),
       homeownerName: 'Sarah Johnson',
       homeownerPhoneNumber: '+1234567890',
       category: 'Electrical',

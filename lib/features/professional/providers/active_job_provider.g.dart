@@ -6,12 +6,12 @@ part of 'active_job_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$activeJobHash() => r'dea7455d0dbe2f308594da39b65325cc9985dba0';
+String _$activeJobHash() => r'1b855ab754347a03bfbbba03ac430bb9110ed4b8';
 
 /// See also [ActiveJob].
 @ProviderFor(ActiveJob)
 final activeJobProvider =
-    AutoDisposeStreamNotifierProvider<ActiveJob, Job?>.internal(
+    AutoDisposeAsyncNotifierProvider<ActiveJob, Job?>.internal(
   ActiveJob.new,
   name: r'activeJobProvider',
   debugGetCreateSourceHash:
@@ -20,22 +20,6 @@ final activeJobProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$ActiveJob = AutoDisposeStreamNotifier<Job?>;
-String _$activeJobStageHash() => r'7f65ccc0ced50229d92a2a296b8ebb62017b8cba';
-
-/// See also [ActiveJobStage].
-@ProviderFor(ActiveJobStage)
-final activeJobStageProvider =
-    AutoDisposeNotifierProvider<ActiveJobStage, JobStage>.internal(
-  ActiveJobStage.new,
-  name: r'activeJobStageProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$activeJobStageHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$ActiveJobStage = AutoDisposeNotifier<JobStage>;
+typedef _$ActiveJob = AutoDisposeAsyncNotifier<Job?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

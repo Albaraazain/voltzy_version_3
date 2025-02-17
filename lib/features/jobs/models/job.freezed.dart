@@ -14,192 +14,6 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-Location _$LocationFromJson(Map<String, dynamic> json) {
-  return _Location.fromJson(json);
-}
-
-/// @nodoc
-mixin _$Location {
-  String get address => throw _privateConstructorUsedError;
-  double get latitude => throw _privateConstructorUsedError;
-  double get longitude => throw _privateConstructorUsedError;
-
-  /// Serializes this Location to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of Location
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $LocationCopyWith<Location> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $LocationCopyWith<$Res> {
-  factory $LocationCopyWith(Location value, $Res Function(Location) then) =
-      _$LocationCopyWithImpl<$Res, Location>;
-  @useResult
-  $Res call({String address, double latitude, double longitude});
-}
-
-/// @nodoc
-class _$LocationCopyWithImpl<$Res, $Val extends Location>
-    implements $LocationCopyWith<$Res> {
-  _$LocationCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  /// Create a copy of Location
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? address = null,
-    Object? latitude = null,
-    Object? longitude = null,
-  }) {
-    return _then(_value.copyWith(
-      address: null == address
-          ? _value.address
-          : address // ignore: cast_nullable_to_non_nullable
-              as String,
-      latitude: null == latitude
-          ? _value.latitude
-          : latitude // ignore: cast_nullable_to_non_nullable
-              as double,
-      longitude: null == longitude
-          ? _value.longitude
-          : longitude // ignore: cast_nullable_to_non_nullable
-              as double,
-    ) as $Val);
-  }
-}
-
-/// @nodoc
-abstract class _$$LocationImplCopyWith<$Res>
-    implements $LocationCopyWith<$Res> {
-  factory _$$LocationImplCopyWith(
-          _$LocationImpl value, $Res Function(_$LocationImpl) then) =
-      __$$LocationImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({String address, double latitude, double longitude});
-}
-
-/// @nodoc
-class __$$LocationImplCopyWithImpl<$Res>
-    extends _$LocationCopyWithImpl<$Res, _$LocationImpl>
-    implements _$$LocationImplCopyWith<$Res> {
-  __$$LocationImplCopyWithImpl(
-      _$LocationImpl _value, $Res Function(_$LocationImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of Location
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? address = null,
-    Object? latitude = null,
-    Object? longitude = null,
-  }) {
-    return _then(_$LocationImpl(
-      address: null == address
-          ? _value.address
-          : address // ignore: cast_nullable_to_non_nullable
-              as String,
-      latitude: null == latitude
-          ? _value.latitude
-          : latitude // ignore: cast_nullable_to_non_nullable
-              as double,
-      longitude: null == longitude
-          ? _value.longitude
-          : longitude // ignore: cast_nullable_to_non_nullable
-              as double,
-    ));
-  }
-}
-
-/// @nodoc
-@JsonSerializable()
-class _$LocationImpl implements _Location {
-  const _$LocationImpl(
-      {required this.address, required this.latitude, required this.longitude});
-
-  factory _$LocationImpl.fromJson(Map<String, dynamic> json) =>
-      _$$LocationImplFromJson(json);
-
-  @override
-  final String address;
-  @override
-  final double latitude;
-  @override
-  final double longitude;
-
-  @override
-  String toString() {
-    return 'Location(address: $address, latitude: $latitude, longitude: $longitude)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$LocationImpl &&
-            (identical(other.address, address) || other.address == address) &&
-            (identical(other.latitude, latitude) ||
-                other.latitude == latitude) &&
-            (identical(other.longitude, longitude) ||
-                other.longitude == longitude));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(runtimeType, address, latitude, longitude);
-
-  /// Create a copy of Location
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$LocationImplCopyWith<_$LocationImpl> get copyWith =>
-      __$$LocationImplCopyWithImpl<_$LocationImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$LocationImplToJson(
-      this,
-    );
-  }
-}
-
-abstract class _Location implements Location {
-  const factory _Location(
-      {required final String address,
-      required final double latitude,
-      required final double longitude}) = _$LocationImpl;
-
-  factory _Location.fromJson(Map<String, dynamic> json) =
-      _$LocationImpl.fromJson;
-
-  @override
-  String get address;
-  @override
-  double get latitude;
-  @override
-  double get longitude;
-
-  /// Create a copy of Location
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$LocationImplCopyWith<_$LocationImpl> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
 Job _$JobFromJson(Map<String, dynamic> json) {
   return _Job.fromJson(json);
 }
@@ -207,27 +21,30 @@ Job _$JobFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$Job {
   String get id => throw _privateConstructorUsedError;
+  String get homeownerName => throw _privateConstructorUsedError;
+  String get homeownerPhoneNumber => throw _privateConstructorUsedError;
+  String get category => throw _privateConstructorUsedError;
+  String get subcategory => throw _privateConstructorUsedError;
+  String get serviceType => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
+  @LocationConverter()
   Location get location => throw _privateConstructorUsedError;
   JobStage get stage => throw _privateConstructorUsedError;
   JobStatus get status => throw _privateConstructorUsedError;
   JobUrgency get urgency => throw _privateConstructorUsedError;
+  double get budget => throw _privateConstructorUsedError;
+  int get estimatedDuration => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
-  String get homeownerId => throw _privateConstructorUsedError;
-  String get homeownerName => throw _privateConstructorUsedError;
-  String get homeownerPhoneNumber => throw _privateConstructorUsedError;
-  Professional? get professional => throw _privateConstructorUsedError;
-  String? get category => throw _privateConstructorUsedError;
-  String? get subcategory => throw _privateConstructorUsedError;
-  List<String>? get photos => throw _privateConstructorUsedError;
-  String? get notes => throw _privateConstructorUsedError;
+  DateTime get updatedAt => throw _privateConstructorUsedError;
+  String? get professionalId => throw _privateConstructorUsedError;
+  Map<String, dynamic>? get professional => throw _privateConstructorUsedError;
   double? get finalPrice => throw _privateConstructorUsedError;
   double? get rating => throw _privateConstructorUsedError;
   String? get review => throw _privateConstructorUsedError;
+  List<String> get photos => throw _privateConstructorUsedError;
+  String? get notes => throw _privateConstructorUsedError;
   DateTime? get completedAt => throw _privateConstructorUsedError;
-  double? get budget => throw _privateConstructorUsedError;
-  Duration? get estimatedDuration => throw _privateConstructorUsedError;
 
   /// Serializes this Job to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -245,30 +62,31 @@ abstract class $JobCopyWith<$Res> {
   @useResult
   $Res call(
       {String id,
+      String homeownerName,
+      String homeownerPhoneNumber,
+      String category,
+      String subcategory,
+      String serviceType,
       String title,
       String description,
-      Location location,
+      @LocationConverter() Location location,
       JobStage stage,
       JobStatus status,
       JobUrgency urgency,
+      double budget,
+      int estimatedDuration,
       DateTime createdAt,
-      String homeownerId,
-      String homeownerName,
-      String homeownerPhoneNumber,
-      Professional? professional,
-      String? category,
-      String? subcategory,
-      List<String>? photos,
-      String? notes,
+      DateTime updatedAt,
+      String? professionalId,
+      Map<String, dynamic>? professional,
       double? finalPrice,
       double? rating,
       String? review,
-      DateTime? completedAt,
-      double? budget,
-      Duration? estimatedDuration});
+      List<String> photos,
+      String? notes,
+      DateTime? completedAt});
 
   $LocationCopyWith<$Res> get location;
-  $ProfessionalCopyWith<$Res>? get professional;
 }
 
 /// @nodoc
@@ -286,32 +104,54 @@ class _$JobCopyWithImpl<$Res, $Val extends Job> implements $JobCopyWith<$Res> {
   @override
   $Res call({
     Object? id = null,
+    Object? homeownerName = null,
+    Object? homeownerPhoneNumber = null,
+    Object? category = null,
+    Object? subcategory = null,
+    Object? serviceType = null,
     Object? title = null,
     Object? description = null,
     Object? location = null,
     Object? stage = null,
     Object? status = null,
     Object? urgency = null,
+    Object? budget = null,
+    Object? estimatedDuration = null,
     Object? createdAt = null,
-    Object? homeownerId = null,
-    Object? homeownerName = null,
-    Object? homeownerPhoneNumber = null,
+    Object? updatedAt = null,
+    Object? professionalId = freezed,
     Object? professional = freezed,
-    Object? category = freezed,
-    Object? subcategory = freezed,
-    Object? photos = freezed,
-    Object? notes = freezed,
     Object? finalPrice = freezed,
     Object? rating = freezed,
     Object? review = freezed,
+    Object? photos = null,
+    Object? notes = freezed,
     Object? completedAt = freezed,
-    Object? budget = freezed,
-    Object? estimatedDuration = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      homeownerName: null == homeownerName
+          ? _value.homeownerName
+          : homeownerName // ignore: cast_nullable_to_non_nullable
+              as String,
+      homeownerPhoneNumber: null == homeownerPhoneNumber
+          ? _value.homeownerPhoneNumber
+          : homeownerPhoneNumber // ignore: cast_nullable_to_non_nullable
+              as String,
+      category: null == category
+          ? _value.category
+          : category // ignore: cast_nullable_to_non_nullable
+              as String,
+      subcategory: null == subcategory
+          ? _value.subcategory
+          : subcategory // ignore: cast_nullable_to_non_nullable
+              as String,
+      serviceType: null == serviceType
+          ? _value.serviceType
+          : serviceType // ignore: cast_nullable_to_non_nullable
               as String,
       title: null == title
           ? _value.title
@@ -337,42 +177,30 @@ class _$JobCopyWithImpl<$Res, $Val extends Job> implements $JobCopyWith<$Res> {
           ? _value.urgency
           : urgency // ignore: cast_nullable_to_non_nullable
               as JobUrgency,
+      budget: null == budget
+          ? _value.budget
+          : budget // ignore: cast_nullable_to_non_nullable
+              as double,
+      estimatedDuration: null == estimatedDuration
+          ? _value.estimatedDuration
+          : estimatedDuration // ignore: cast_nullable_to_non_nullable
+              as int,
       createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      homeownerId: null == homeownerId
-          ? _value.homeownerId
-          : homeownerId // ignore: cast_nullable_to_non_nullable
-              as String,
-      homeownerName: null == homeownerName
-          ? _value.homeownerName
-          : homeownerName // ignore: cast_nullable_to_non_nullable
-              as String,
-      homeownerPhoneNumber: null == homeownerPhoneNumber
-          ? _value.homeownerPhoneNumber
-          : homeownerPhoneNumber // ignore: cast_nullable_to_non_nullable
-              as String,
+      updatedAt: null == updatedAt
+          ? _value.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      professionalId: freezed == professionalId
+          ? _value.professionalId
+          : professionalId // ignore: cast_nullable_to_non_nullable
+              as String?,
       professional: freezed == professional
           ? _value.professional
           : professional // ignore: cast_nullable_to_non_nullable
-              as Professional?,
-      category: freezed == category
-          ? _value.category
-          : category // ignore: cast_nullable_to_non_nullable
-              as String?,
-      subcategory: freezed == subcategory
-          ? _value.subcategory
-          : subcategory // ignore: cast_nullable_to_non_nullable
-              as String?,
-      photos: freezed == photos
-          ? _value.photos
-          : photos // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
-      notes: freezed == notes
-          ? _value.notes
-          : notes // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as Map<String, dynamic>?,
       finalPrice: freezed == finalPrice
           ? _value.finalPrice
           : finalPrice // ignore: cast_nullable_to_non_nullable
@@ -385,18 +213,18 @@ class _$JobCopyWithImpl<$Res, $Val extends Job> implements $JobCopyWith<$Res> {
           ? _value.review
           : review // ignore: cast_nullable_to_non_nullable
               as String?,
+      photos: null == photos
+          ? _value.photos
+          : photos // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      notes: freezed == notes
+          ? _value.notes
+          : notes // ignore: cast_nullable_to_non_nullable
+              as String?,
       completedAt: freezed == completedAt
           ? _value.completedAt
           : completedAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
-      budget: freezed == budget
-          ? _value.budget
-          : budget // ignore: cast_nullable_to_non_nullable
-              as double?,
-      estimatedDuration: freezed == estimatedDuration
-          ? _value.estimatedDuration
-          : estimatedDuration // ignore: cast_nullable_to_non_nullable
-              as Duration?,
     ) as $Val);
   }
 
@@ -409,20 +237,6 @@ class _$JobCopyWithImpl<$Res, $Val extends Job> implements $JobCopyWith<$Res> {
       return _then(_value.copyWith(location: value) as $Val);
     });
   }
-
-  /// Create a copy of Job
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $ProfessionalCopyWith<$Res>? get professional {
-    if (_value.professional == null) {
-      return null;
-    }
-
-    return $ProfessionalCopyWith<$Res>(_value.professional!, (value) {
-      return _then(_value.copyWith(professional: value) as $Val);
-    });
-  }
 }
 
 /// @nodoc
@@ -433,32 +247,32 @@ abstract class _$$JobImplCopyWith<$Res> implements $JobCopyWith<$Res> {
   @useResult
   $Res call(
       {String id,
+      String homeownerName,
+      String homeownerPhoneNumber,
+      String category,
+      String subcategory,
+      String serviceType,
       String title,
       String description,
-      Location location,
+      @LocationConverter() Location location,
       JobStage stage,
       JobStatus status,
       JobUrgency urgency,
+      double budget,
+      int estimatedDuration,
       DateTime createdAt,
-      String homeownerId,
-      String homeownerName,
-      String homeownerPhoneNumber,
-      Professional? professional,
-      String? category,
-      String? subcategory,
-      List<String>? photos,
-      String? notes,
+      DateTime updatedAt,
+      String? professionalId,
+      Map<String, dynamic>? professional,
       double? finalPrice,
       double? rating,
       String? review,
-      DateTime? completedAt,
-      double? budget,
-      Duration? estimatedDuration});
+      List<String> photos,
+      String? notes,
+      DateTime? completedAt});
 
   @override
   $LocationCopyWith<$Res> get location;
-  @override
-  $ProfessionalCopyWith<$Res>? get professional;
 }
 
 /// @nodoc
@@ -473,32 +287,54 @@ class __$$JobImplCopyWithImpl<$Res> extends _$JobCopyWithImpl<$Res, _$JobImpl>
   @override
   $Res call({
     Object? id = null,
+    Object? homeownerName = null,
+    Object? homeownerPhoneNumber = null,
+    Object? category = null,
+    Object? subcategory = null,
+    Object? serviceType = null,
     Object? title = null,
     Object? description = null,
     Object? location = null,
     Object? stage = null,
     Object? status = null,
     Object? urgency = null,
+    Object? budget = null,
+    Object? estimatedDuration = null,
     Object? createdAt = null,
-    Object? homeownerId = null,
-    Object? homeownerName = null,
-    Object? homeownerPhoneNumber = null,
+    Object? updatedAt = null,
+    Object? professionalId = freezed,
     Object? professional = freezed,
-    Object? category = freezed,
-    Object? subcategory = freezed,
-    Object? photos = freezed,
-    Object? notes = freezed,
     Object? finalPrice = freezed,
     Object? rating = freezed,
     Object? review = freezed,
+    Object? photos = null,
+    Object? notes = freezed,
     Object? completedAt = freezed,
-    Object? budget = freezed,
-    Object? estimatedDuration = freezed,
   }) {
     return _then(_$JobImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      homeownerName: null == homeownerName
+          ? _value.homeownerName
+          : homeownerName // ignore: cast_nullable_to_non_nullable
+              as String,
+      homeownerPhoneNumber: null == homeownerPhoneNumber
+          ? _value.homeownerPhoneNumber
+          : homeownerPhoneNumber // ignore: cast_nullable_to_non_nullable
+              as String,
+      category: null == category
+          ? _value.category
+          : category // ignore: cast_nullable_to_non_nullable
+              as String,
+      subcategory: null == subcategory
+          ? _value.subcategory
+          : subcategory // ignore: cast_nullable_to_non_nullable
+              as String,
+      serviceType: null == serviceType
+          ? _value.serviceType
+          : serviceType // ignore: cast_nullable_to_non_nullable
               as String,
       title: null == title
           ? _value.title
@@ -524,42 +360,30 @@ class __$$JobImplCopyWithImpl<$Res> extends _$JobCopyWithImpl<$Res, _$JobImpl>
           ? _value.urgency
           : urgency // ignore: cast_nullable_to_non_nullable
               as JobUrgency,
+      budget: null == budget
+          ? _value.budget
+          : budget // ignore: cast_nullable_to_non_nullable
+              as double,
+      estimatedDuration: null == estimatedDuration
+          ? _value.estimatedDuration
+          : estimatedDuration // ignore: cast_nullable_to_non_nullable
+              as int,
       createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      homeownerId: null == homeownerId
-          ? _value.homeownerId
-          : homeownerId // ignore: cast_nullable_to_non_nullable
-              as String,
-      homeownerName: null == homeownerName
-          ? _value.homeownerName
-          : homeownerName // ignore: cast_nullable_to_non_nullable
-              as String,
-      homeownerPhoneNumber: null == homeownerPhoneNumber
-          ? _value.homeownerPhoneNumber
-          : homeownerPhoneNumber // ignore: cast_nullable_to_non_nullable
-              as String,
+      updatedAt: null == updatedAt
+          ? _value.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      professionalId: freezed == professionalId
+          ? _value.professionalId
+          : professionalId // ignore: cast_nullable_to_non_nullable
+              as String?,
       professional: freezed == professional
-          ? _value.professional
+          ? _value._professional
           : professional // ignore: cast_nullable_to_non_nullable
-              as Professional?,
-      category: freezed == category
-          ? _value.category
-          : category // ignore: cast_nullable_to_non_nullable
-              as String?,
-      subcategory: freezed == subcategory
-          ? _value.subcategory
-          : subcategory // ignore: cast_nullable_to_non_nullable
-              as String?,
-      photos: freezed == photos
-          ? _value._photos
-          : photos // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
-      notes: freezed == notes
-          ? _value.notes
-          : notes // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as Map<String, dynamic>?,
       finalPrice: freezed == finalPrice
           ? _value.finalPrice
           : finalPrice // ignore: cast_nullable_to_non_nullable
@@ -572,49 +396,52 @@ class __$$JobImplCopyWithImpl<$Res> extends _$JobCopyWithImpl<$Res, _$JobImpl>
           ? _value.review
           : review // ignore: cast_nullable_to_non_nullable
               as String?,
+      photos: null == photos
+          ? _value._photos
+          : photos // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      notes: freezed == notes
+          ? _value.notes
+          : notes // ignore: cast_nullable_to_non_nullable
+              as String?,
       completedAt: freezed == completedAt
           ? _value.completedAt
           : completedAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
-      budget: freezed == budget
-          ? _value.budget
-          : budget // ignore: cast_nullable_to_non_nullable
-              as double?,
-      estimatedDuration: freezed == estimatedDuration
-          ? _value.estimatedDuration
-          : estimatedDuration // ignore: cast_nullable_to_non_nullable
-              as Duration?,
     ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$JobImpl implements _Job {
-  const _$JobImpl(
+class _$JobImpl with DiagnosticableTreeMixin implements _Job {
+  _$JobImpl(
       {required this.id,
+      required this.homeownerName,
+      required this.homeownerPhoneNumber,
+      required this.category,
+      required this.subcategory,
+      required this.serviceType,
       required this.title,
       required this.description,
-      required this.location,
+      @LocationConverter() required this.location,
       required this.stage,
       required this.status,
       required this.urgency,
+      required this.budget,
+      required this.estimatedDuration,
       required this.createdAt,
-      required this.homeownerId,
-      required this.homeownerName,
-      required this.homeownerPhoneNumber,
-      this.professional,
-      this.category,
-      this.subcategory,
-      final List<String>? photos,
-      this.notes,
+      required this.updatedAt,
+      this.professionalId,
+      final Map<String, dynamic>? professional,
       this.finalPrice,
       this.rating,
       this.review,
-      this.completedAt,
-      this.budget,
-      this.estimatedDuration})
-      : _photos = photos;
+      final List<String> photos = const [],
+      this.notes,
+      this.completedAt})
+      : _professional = professional,
+        _photos = photos;
 
   factory _$JobImpl.fromJson(Map<String, dynamic> json) =>
       _$$JobImplFromJson(json);
@@ -622,10 +449,21 @@ class _$JobImpl implements _Job {
   @override
   final String id;
   @override
+  final String homeownerName;
+  @override
+  final String homeownerPhoneNumber;
+  @override
+  final String category;
+  @override
+  final String subcategory;
+  @override
+  final String serviceType;
+  @override
   final String title;
   @override
   final String description;
   @override
+  @LocationConverter()
   final Location location;
   @override
   final JobStage stage;
@@ -634,47 +472,79 @@ class _$JobImpl implements _Job {
   @override
   final JobUrgency urgency;
   @override
+  final double budget;
+  @override
+  final int estimatedDuration;
+  @override
   final DateTime createdAt;
   @override
-  final String homeownerId;
+  final DateTime updatedAt;
   @override
-  final String homeownerName;
+  final String? professionalId;
+  final Map<String, dynamic>? _professional;
   @override
-  final String homeownerPhoneNumber;
-  @override
-  final Professional? professional;
-  @override
-  final String? category;
-  @override
-  final String? subcategory;
-  final List<String>? _photos;
-  @override
-  List<String>? get photos {
-    final value = _photos;
+  Map<String, dynamic>? get professional {
+    final value = _professional;
     if (value == null) return null;
-    if (_photos is EqualUnmodifiableListView) return _photos;
+    if (_professional is EqualUnmodifiableMapView) return _professional;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
+    return EqualUnmodifiableMapView(value);
   }
 
-  @override
-  final String? notes;
   @override
   final double? finalPrice;
   @override
   final double? rating;
   @override
   final String? review;
+  final List<String> _photos;
   @override
-  final DateTime? completedAt;
-  @override
-  final double? budget;
-  @override
-  final Duration? estimatedDuration;
+  @JsonKey()
+  List<String> get photos {
+    if (_photos is EqualUnmodifiableListView) return _photos;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_photos);
+  }
 
   @override
-  String toString() {
-    return 'Job(id: $id, title: $title, description: $description, location: $location, stage: $stage, status: $status, urgency: $urgency, createdAt: $createdAt, homeownerId: $homeownerId, homeownerName: $homeownerName, homeownerPhoneNumber: $homeownerPhoneNumber, professional: $professional, category: $category, subcategory: $subcategory, photos: $photos, notes: $notes, finalPrice: $finalPrice, rating: $rating, review: $review, completedAt: $completedAt, budget: $budget, estimatedDuration: $estimatedDuration)';
+  final String? notes;
+  @override
+  final DateTime? completedAt;
+
+  @override
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
+    return 'Job(id: $id, homeownerName: $homeownerName, homeownerPhoneNumber: $homeownerPhoneNumber, category: $category, subcategory: $subcategory, serviceType: $serviceType, title: $title, description: $description, location: $location, stage: $stage, status: $status, urgency: $urgency, budget: $budget, estimatedDuration: $estimatedDuration, createdAt: $createdAt, updatedAt: $updatedAt, professionalId: $professionalId, professional: $professional, finalPrice: $finalPrice, rating: $rating, review: $review, photos: $photos, notes: $notes, completedAt: $completedAt)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'Job'))
+      ..add(DiagnosticsProperty('id', id))
+      ..add(DiagnosticsProperty('homeownerName', homeownerName))
+      ..add(DiagnosticsProperty('homeownerPhoneNumber', homeownerPhoneNumber))
+      ..add(DiagnosticsProperty('category', category))
+      ..add(DiagnosticsProperty('subcategory', subcategory))
+      ..add(DiagnosticsProperty('serviceType', serviceType))
+      ..add(DiagnosticsProperty('title', title))
+      ..add(DiagnosticsProperty('description', description))
+      ..add(DiagnosticsProperty('location', location))
+      ..add(DiagnosticsProperty('stage', stage))
+      ..add(DiagnosticsProperty('status', status))
+      ..add(DiagnosticsProperty('urgency', urgency))
+      ..add(DiagnosticsProperty('budget', budget))
+      ..add(DiagnosticsProperty('estimatedDuration', estimatedDuration))
+      ..add(DiagnosticsProperty('createdAt', createdAt))
+      ..add(DiagnosticsProperty('updatedAt', updatedAt))
+      ..add(DiagnosticsProperty('professionalId', professionalId))
+      ..add(DiagnosticsProperty('professional', professional))
+      ..add(DiagnosticsProperty('finalPrice', finalPrice))
+      ..add(DiagnosticsProperty('rating', rating))
+      ..add(DiagnosticsProperty('review', review))
+      ..add(DiagnosticsProperty('photos', photos))
+      ..add(DiagnosticsProperty('notes', notes))
+      ..add(DiagnosticsProperty('completedAt', completedAt));
   }
 
   @override
@@ -683,6 +553,16 @@ class _$JobImpl implements _Job {
         (other.runtimeType == runtimeType &&
             other is _$JobImpl &&
             (identical(other.id, id) || other.id == id) &&
+            (identical(other.homeownerName, homeownerName) ||
+                other.homeownerName == homeownerName) &&
+            (identical(other.homeownerPhoneNumber, homeownerPhoneNumber) ||
+                other.homeownerPhoneNumber == homeownerPhoneNumber) &&
+            (identical(other.category, category) ||
+                other.category == category) &&
+            (identical(other.subcategory, subcategory) ||
+                other.subcategory == subcategory) &&
+            (identical(other.serviceType, serviceType) ||
+                other.serviceType == serviceType) &&
             (identical(other.title, title) || other.title == title) &&
             (identical(other.description, description) ||
                 other.description == description) &&
@@ -691,31 +571,25 @@ class _$JobImpl implements _Job {
             (identical(other.stage, stage) || other.stage == stage) &&
             (identical(other.status, status) || other.status == status) &&
             (identical(other.urgency, urgency) || other.urgency == urgency) &&
+            (identical(other.budget, budget) || other.budget == budget) &&
+            (identical(other.estimatedDuration, estimatedDuration) ||
+                other.estimatedDuration == estimatedDuration) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
-            (identical(other.homeownerId, homeownerId) ||
-                other.homeownerId == homeownerId) &&
-            (identical(other.homeownerName, homeownerName) ||
-                other.homeownerName == homeownerName) &&
-            (identical(other.homeownerPhoneNumber, homeownerPhoneNumber) ||
-                other.homeownerPhoneNumber == homeownerPhoneNumber) &&
-            (identical(other.professional, professional) ||
-                other.professional == professional) &&
-            (identical(other.category, category) ||
-                other.category == category) &&
-            (identical(other.subcategory, subcategory) ||
-                other.subcategory == subcategory) &&
-            const DeepCollectionEquality().equals(other._photos, _photos) &&
-            (identical(other.notes, notes) || other.notes == notes) &&
+            (identical(other.updatedAt, updatedAt) ||
+                other.updatedAt == updatedAt) &&
+            (identical(other.professionalId, professionalId) ||
+                other.professionalId == professionalId) &&
+            const DeepCollectionEquality()
+                .equals(other._professional, _professional) &&
             (identical(other.finalPrice, finalPrice) ||
                 other.finalPrice == finalPrice) &&
             (identical(other.rating, rating) || other.rating == rating) &&
             (identical(other.review, review) || other.review == review) &&
+            const DeepCollectionEquality().equals(other._photos, _photos) &&
+            (identical(other.notes, notes) || other.notes == notes) &&
             (identical(other.completedAt, completedAt) ||
-                other.completedAt == completedAt) &&
-            (identical(other.budget, budget) || other.budget == budget) &&
-            (identical(other.estimatedDuration, estimatedDuration) ||
-                other.estimatedDuration == estimatedDuration));
+                other.completedAt == completedAt));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -723,27 +597,29 @@ class _$JobImpl implements _Job {
   int get hashCode => Object.hashAll([
         runtimeType,
         id,
+        homeownerName,
+        homeownerPhoneNumber,
+        category,
+        subcategory,
+        serviceType,
         title,
         description,
         location,
         stage,
         status,
         urgency,
+        budget,
+        estimatedDuration,
         createdAt,
-        homeownerId,
-        homeownerName,
-        homeownerPhoneNumber,
-        professional,
-        category,
-        subcategory,
-        const DeepCollectionEquality().hash(_photos),
-        notes,
+        updatedAt,
+        professionalId,
+        const DeepCollectionEquality().hash(_professional),
         finalPrice,
         rating,
         review,
-        completedAt,
-        budget,
-        estimatedDuration
+        const DeepCollectionEquality().hash(_photos),
+        notes,
+        completedAt
       ]);
 
   /// Create a copy of Job
@@ -763,39 +639,52 @@ class _$JobImpl implements _Job {
 }
 
 abstract class _Job implements Job {
-  const factory _Job(
+  factory _Job(
       {required final String id,
+      required final String homeownerName,
+      required final String homeownerPhoneNumber,
+      required final String category,
+      required final String subcategory,
+      required final String serviceType,
       required final String title,
       required final String description,
-      required final Location location,
+      @LocationConverter() required final Location location,
       required final JobStage stage,
       required final JobStatus status,
       required final JobUrgency urgency,
+      required final double budget,
+      required final int estimatedDuration,
       required final DateTime createdAt,
-      required final String homeownerId,
-      required final String homeownerName,
-      required final String homeownerPhoneNumber,
-      final Professional? professional,
-      final String? category,
-      final String? subcategory,
-      final List<String>? photos,
-      final String? notes,
+      required final DateTime updatedAt,
+      final String? professionalId,
+      final Map<String, dynamic>? professional,
       final double? finalPrice,
       final double? rating,
       final String? review,
-      final DateTime? completedAt,
-      final double? budget,
-      final Duration? estimatedDuration}) = _$JobImpl;
+      final List<String> photos,
+      final String? notes,
+      final DateTime? completedAt}) = _$JobImpl;
 
   factory _Job.fromJson(Map<String, dynamic> json) = _$JobImpl.fromJson;
 
   @override
   String get id;
   @override
+  String get homeownerName;
+  @override
+  String get homeownerPhoneNumber;
+  @override
+  String get category;
+  @override
+  String get subcategory;
+  @override
+  String get serviceType;
+  @override
   String get title;
   @override
   String get description;
   @override
+  @LocationConverter()
   Location get location;
   @override
   JobStage get stage;
@@ -804,23 +693,17 @@ abstract class _Job implements Job {
   @override
   JobUrgency get urgency;
   @override
+  double get budget;
+  @override
+  int get estimatedDuration;
+  @override
   DateTime get createdAt;
   @override
-  String get homeownerId;
+  DateTime get updatedAt;
   @override
-  String get homeownerName;
+  String? get professionalId;
   @override
-  String get homeownerPhoneNumber;
-  @override
-  Professional? get professional;
-  @override
-  String? get category;
-  @override
-  String? get subcategory;
-  @override
-  List<String>? get photos;
-  @override
-  String? get notes;
+  Map<String, dynamic>? get professional;
   @override
   double? get finalPrice;
   @override
@@ -828,11 +711,11 @@ abstract class _Job implements Job {
   @override
   String? get review;
   @override
+  List<String> get photos;
+  @override
+  String? get notes;
+  @override
   DateTime? get completedAt;
-  @override
-  double? get budget;
-  @override
-  Duration? get estimatedDuration;
 
   /// Create a copy of Job
   /// with the given fields replaced by the non-null parameter values.

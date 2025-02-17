@@ -1,131 +1,130 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:voltzy_version_3/features/professional/models/professional.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import '../../../core/models/location.dart';
+import '../../../core/utils/json_converters.dart';
 
 part 'job.freezed.dart';
 part 'job.g.dart';
 
+/// Represents the stages a job can be in
+@JsonEnum()
 enum JobStage {
-  quoteCreation,
+  @JsonValue('pending')
+  pending,
+  @JsonValue('enRoute')
   enRoute,
+  @JsonValue('atLocation')
   atLocation,
+  @JsonValue('diagnosis')
   diagnosis,
+  @JsonValue('quoteCreation')
+  quoteCreation,
+  @JsonValue('inProgress')
   inProgress,
-  completion,
-  completed
-}
+  @JsonValue('completion')
+  completion;
 
-extension JobStageX on JobStage {
   String get displayName {
-    switch (this) {
-      case JobStage.quoteCreation:
-        return 'Quote Creation';
-      case JobStage.enRoute:
-        return 'En Route';
-      case JobStage.atLocation:
-        return 'At Location';
-      case JobStage.diagnosis:
-        return 'Diagnosis';
-      case JobStage.inProgress:
-        return 'In Progress';
-      case JobStage.completion:
-        return 'Completion';
-      case JobStage.completed:
-        return 'Completed';
-    }
+    return switch (this) {
+      JobStage.pending => 'Pending',
+      JobStage.enRoute => 'En Route',
+      JobStage.atLocation => 'At Location',
+      JobStage.diagnosis => 'Diagnosis',
+      JobStage.quoteCreation => 'Quote Creation',
+      JobStage.inProgress => 'In Progress',
+      JobStage.completion => 'Completion',
+    };
   }
 }
 
-enum JobStatus { pending, accepted, rejected, inProgress, completed, cancelled }
+/// Represents the status of a job
+@JsonEnum()
+enum JobStatus {
+  @JsonValue('pending')
+  pending,
+  @JsonValue('accepted')
+  accepted,
+  @JsonValue('rejected')
+  rejected,
+  @JsonValue('inProgress')
+  inProgress,
+  @JsonValue('completed')
+  completed,
+  @JsonValue('cancelled')
+  cancelled;
 
-extension JobStatusX on JobStatus {
   String get displayName {
-    switch (this) {
-      case JobStatus.pending:
-        return 'Pending';
-      case JobStatus.accepted:
-        return 'Accepted';
-      case JobStatus.rejected:
-        return 'Rejected';
-      case JobStatus.inProgress:
-        return 'In Progress';
-      case JobStatus.completed:
-        return 'Completed';
-      case JobStatus.cancelled:
-        return 'Cancelled';
-    }
+    return switch (this) {
+      JobStatus.pending => 'Pending',
+      JobStatus.accepted => 'Accepted',
+      JobStatus.rejected => 'Rejected',
+      JobStatus.inProgress => 'In Progress',
+      JobStatus.completed => 'Completed',
+      JobStatus.cancelled => 'Cancelled',
+    };
   }
-
-  bool get isActive => this == JobStatus.inProgress;
 }
 
-enum JobUrgency { low, medium, high, emergency }
+/// Represents the urgency level of a job
+@JsonEnum()
+enum JobUrgency {
+  @JsonValue('low')
+  low,
+  @JsonValue('medium')
+  medium,
+  @JsonValue('high')
+  high,
+  @JsonValue('emergency')
+  emergency;
 
-extension JobUrgencyX on JobUrgency {
   String get displayName {
-    switch (this) {
-      case JobUrgency.low:
-        return 'Low';
-      case JobUrgency.medium:
-        return 'Medium';
-      case JobUrgency.high:
-        return 'High';
-      case JobUrgency.emergency:
-        return 'Emergency';
-    }
+    return switch (this) {
+      JobUrgency.low => 'Low',
+      JobUrgency.medium => 'Medium',
+      JobUrgency.high => 'High',
+      JobUrgency.emergency => 'Emergency',
+    };
   }
 
   Color get color {
-    switch (this) {
-      case JobUrgency.low:
-        return Colors.green;
-      case JobUrgency.medium:
-        return Colors.orange;
-      case JobUrgency.high:
-        return Colors.red;
-      case JobUrgency.emergency:
-        return Colors.red.shade900;
-    }
+    return switch (this) {
+      JobUrgency.low => const Color(0xFF4CAF50), // Green
+      JobUrgency.medium => const Color(0xFFFF9800), // Orange
+      JobUrgency.high => const Color(0xFFF44336), // Red
+      JobUrgency.emergency => const Color(0xFF9C27B0), // Purple
+    };
   }
 }
 
-@freezed
-class Location with _$Location {
-  const factory Location({
-    required String address,
-    required double latitude,
-    required double longitude,
-  }) = _Location;
-
-  factory Location.fromJson(Map<String, dynamic> json) =>
-      _$LocationFromJson(json);
-}
-
+/// Represents a job in the system
 @freezed
 class Job with _$Job {
-  const factory Job({
+  factory Job({
     required String id,
+    required String homeownerName,
+    required String homeownerPhoneNumber,
+    required String category,
+    required String subcategory,
+    required String serviceType,
     required String title,
     required String description,
-    required Location location,
+    @LocationConverter() required Location location,
     required JobStage stage,
     required JobStatus status,
     required JobUrgency urgency,
+    required double budget,
+    required int estimatedDuration,
     required DateTime createdAt,
-    required String homeownerId,
-    required String homeownerName,
-    required String homeownerPhoneNumber,
-    Professional? professional,
-    String? category,
-    String? subcategory,
-    List<String>? photos,
-    String? notes,
+    required DateTime updatedAt,
+    String? professionalId,
+    Map<String, dynamic>? professional,
     double? finalPrice,
     double? rating,
     String? review,
+    @Default([]) List<String> photos,
+    String? notes,
     DateTime? completedAt,
-    double? budget,
-    Duration? estimatedDuration,
   }) = _Job;
 
   factory Job.fromJson(Map<String, dynamic> json) => _$JobFromJson(json);

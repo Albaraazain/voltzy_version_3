@@ -1,41 +1,41 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-import '../../../core/repositories/supabase_repository.dart';
 import '../../../core/errors/app_error.dart';
 import '../models/service_category_card.dart';
 import '../../../core/config/feature_flags.dart';
-import '../../../core/providers/supabase_provider.dart';
 
 abstract class ServiceCategoryRepository {
   Future<List<ServiceCategoryCard>> getServiceCategories();
 }
 
-class SupabaseServiceCategoryRepository extends SupabaseRepository
-    implements ServiceCategoryRepository {
-  SupabaseServiceCategoryRepository(SupabaseClient client) : super(client);
+class FirebaseServiceCategoryRepository implements ServiceCategoryRepository {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   @override
   Future<List<ServiceCategoryCard>> getServiceCategories() async {
-    return handleError(() async {
-      final response = await client.rpc(
-        'get_service_categories',
-        params: {'p_is_active': true},
-      );
+    try {
+      final querySnapshot = await _firestore
+          .collection('service_categories')
+          .where('is_active', isEqualTo: true)
+          .get();
 
-      return (response as List)
-          .map((category) => ServiceCategoryCard(
-                id: category['id'],
-                name: category['name'],
-                description: category['description'] ?? '',
-                iconName: category['icon_name'],
-                serviceCount: 0, // TODO: Implement service count
-                minPrice: (category['min_price'] as num?)?.toDouble() ?? 0.0,
-                maxPrice: (category['max_price'] as num?)?.toDouble() ?? 0.0,
-                accentColor: _parseColor(category['accent_color']),
-              ))
-          .toList();
-    }, 'getServiceCategories');
+      return querySnapshot.docs.map((doc) {
+        final data = doc.data();
+        return ServiceCategoryCard(
+          id: doc.id,
+          name: data['name'] ?? '',
+          description: data['description'] ?? '',
+          iconName: data['icon_name'] ?? '',
+          serviceCount: data['service_count'] ?? 0,
+          minPrice: (data['min_price'] as num?)?.toDouble() ?? 0.0,
+          maxPrice: (data['max_price'] as num?)?.toDouble() ?? 0.0,
+          accentColor: _parseColor(data['accent_color']),
+        );
+      }).toList();
+    } catch (e) {
+      throw AppError(context: 'ServiceCategoryRepository', message: 'Failed to fetch service categories: ${e.toString()}');
+    }
   }
 
   Color _parseColor(String? colorString) {
@@ -125,8 +125,8 @@ class MockServiceCategoryRepository implements ServiceCategoryRepository {
 
 final serviceCategoryRepositoryProvider =
     Provider<ServiceCategoryRepository>((ref) {
-  if (FeatureFlags.useSupabaseServiceCategories) {
-    return SupabaseServiceCategoryRepository(ref.watch(supabaseClientProvider));
+  if (FeatureFlags.useFirebaseServiceCategories) {
+    return FirebaseServiceCategoryRepository();
   }
   return MockServiceCategoryRepository();
 });

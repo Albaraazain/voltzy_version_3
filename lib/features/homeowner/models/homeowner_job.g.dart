@@ -8,7 +8,7 @@ part of 'homeowner_job.dart';
 
 _$HomeownerJobImpl _$$HomeownerJobImplFromJson(Map<String, dynamic> json) =>
     _$HomeownerJobImpl(
-      job: Job.fromJson(json['job'] as Map<String, dynamic>),
+      job: const JobConverter().fromJson(json['job'] as Map<String, dynamic>),
       status: $enumDecode(_$HomeownerJobStatusEnumMap, json['status']),
       requestedTime: DateTime.parse(json['requestedTime'] as String),
       images:
@@ -21,7 +21,7 @@ _$HomeownerJobImpl _$$HomeownerJobImplFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$$HomeownerJobImplToJson(_$HomeownerJobImpl instance) =>
     <String, dynamic>{
-      'job': instance.job,
+      'job': const JobConverter().toJson(instance.job),
       'status': _$HomeownerJobStatusEnumMap[instance.status]!,
       'requestedTime': instance.requestedTime.toIso8601String(),
       'images': instance.images,

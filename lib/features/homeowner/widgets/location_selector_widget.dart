@@ -36,6 +36,8 @@ class LocationSelectorWidget extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
             child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Container(
                   padding: const EdgeInsets.all(12),

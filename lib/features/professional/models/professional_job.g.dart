@@ -9,7 +9,7 @@ part of 'professional_job.dart';
 _$ProfessionalJobImpl _$$ProfessionalJobImplFromJson(
         Map<String, dynamic> json) =>
     _$ProfessionalJobImpl(
-      job: Job.fromJson(json['job'] as Map<String, dynamic>),
+      job: const JobConverter().fromJson(json['job'] as Map<String, dynamic>),
       stage: $enumDecode(_$JobStageEnumMap, json['stage']),
       status: $enumDecode(_$JobStatusEnumMap, json['status']),
       urgency: $enumDecode(_$JobUrgencyEnumMap, json['urgency']),
@@ -23,7 +23,7 @@ _$ProfessionalJobImpl _$$ProfessionalJobImplFromJson(
 Map<String, dynamic> _$$ProfessionalJobImplToJson(
         _$ProfessionalJobImpl instance) =>
     <String, dynamic>{
-      'job': instance.job,
+      'job': const JobConverter().toJson(instance.job),
       'stage': _$JobStageEnumMap[instance.stage]!,
       'status': _$JobStatusEnumMap[instance.status]!,
       'urgency': _$JobUrgencyEnumMap[instance.urgency]!,
@@ -33,13 +33,13 @@ Map<String, dynamic> _$$ProfessionalJobImplToJson(
     };
 
 const _$JobStageEnumMap = {
-  JobStage.quoteCreation: 'quoteCreation',
+  JobStage.pending: 'pending',
   JobStage.enRoute: 'enRoute',
   JobStage.atLocation: 'atLocation',
   JobStage.diagnosis: 'diagnosis',
+  JobStage.quoteCreation: 'quoteCreation',
   JobStage.inProgress: 'inProgress',
   JobStage.completion: 'completion',
-  JobStage.completed: 'completed',
 };
 
 const _$JobStatusEnumMap = {

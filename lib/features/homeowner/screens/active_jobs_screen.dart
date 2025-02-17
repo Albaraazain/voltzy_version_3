@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:voltzy_version_3/features/homeowner/providers/homeowner_job_providers.dart';
 import 'package:voltzy_version_3/features/jobs/models/job.dart';
+import 'package:voltzy_version_3/features/professional/models/professional.dart';
 import 'package:voltzy_version_3/shared/widgets/loading_indicator.dart';
 
 import 'job_stages/homeowner_at_location_view.dart';
@@ -193,6 +194,9 @@ class ActiveJobsScreen extends ConsumerWidget {
 
   void _navigateToJobView(BuildContext context, Job job) {
     final route = switch (job.stage) {
+      JobStage.pending => MaterialPageRoute(
+          builder: (context) => HomeownerCompletionView(job: job),
+        ),
       JobStage.enRoute => MaterialPageRoute(
           builder: (context) => HomeownerEnRouteView(job: job),
         ),
@@ -209,9 +213,6 @@ class ActiveJobsScreen extends ConsumerWidget {
           builder: (context) => HomeownerInProgressView(job: job),
         ),
       JobStage.completion => MaterialPageRoute(
-          builder: (context) => HomeownerCompletionView(job: job),
-        ),
-      JobStage.completed => MaterialPageRoute(
           builder: (context) => HomeownerCompletionView(job: job),
         ),
     };
@@ -382,7 +383,8 @@ class _ServiceCard extends StatelessWidget {
                                   ),
                                   child: Center(
                                     child: Text(
-                                      job.professional!.name
+                                      Professional.fromJson(job.professional!)
+                                          .name
                                           .split(' ')
                                           .map((e) => e[0])
                                           .join(''),
@@ -399,7 +401,8 @@ class _ServiceCard extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      job.professional!.name,
+                                      Professional.fromJson(job.professional!)
+                                          .name,
                                       style: TextStyle(
                                         fontSize: 12,
                                         color: Colors.grey[600],
@@ -414,7 +417,9 @@ class _ServiceCard extends StatelessWidget {
                                         ),
                                         const SizedBox(width: 4),
                                         Text(
-                                          job.professional!.rating.toString(),
+                                          Professional.fromJson(job.professional!)
+                                              .rating
+                                              .toString(),
                                           style: TextStyle(
                                             fontSize: 12,
                                             color: Colors.grey[500],
@@ -548,13 +553,13 @@ class _ServiceCard extends StatelessWidget {
 
   int _getStepNumber() {
     return switch (job.stage) {
+      JobStage.pending => 0,
       JobStage.enRoute => 1,
       JobStage.atLocation => 2,
       JobStage.diagnosis => 3,
       JobStage.quoteCreation => 4,
       JobStage.inProgress => 5,
       JobStage.completion => 6,
-      JobStage.completed => 6,
     };
   }
 }

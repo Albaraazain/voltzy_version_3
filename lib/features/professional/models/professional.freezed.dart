@@ -22,10 +22,17 @@ Professional _$ProfessionalFromJson(Map<String, dynamic> json) {
 mixin _$Professional {
   String get id => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
-  String? get profileImageUrl => throw _privateConstructorUsedError;
+  String get phoneNumber => throw _privateConstructorUsedError;
+  String get email => throw _privateConstructorUsedError;
+  String get profileImageUrl => throw _privateConstructorUsedError;
   double get rating => throw _privateConstructorUsedError;
   int get completedJobs => throw _privateConstructorUsedError;
   double get responseRate => throw _privateConstructorUsedError;
+  List<String> get services => throw _privateConstructorUsedError;
+  List<String> get certifications => throw _privateConstructorUsedError;
+  bool get isAvailable => throw _privateConstructorUsedError;
+  DateTime get createdAt => throw _privateConstructorUsedError;
+  DateTime get updatedAt => throw _privateConstructorUsedError;
 
   /// Serializes this Professional to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -46,10 +53,17 @@ abstract class $ProfessionalCopyWith<$Res> {
   $Res call(
       {String id,
       String name,
-      String? profileImageUrl,
+      String phoneNumber,
+      String email,
+      String profileImageUrl,
       double rating,
       int completedJobs,
-      double responseRate});
+      double responseRate,
+      List<String> services,
+      List<String> certifications,
+      bool isAvailable,
+      DateTime createdAt,
+      DateTime updatedAt});
 }
 
 /// @nodoc
@@ -69,10 +83,17 @@ class _$ProfessionalCopyWithImpl<$Res, $Val extends Professional>
   $Res call({
     Object? id = null,
     Object? name = null,
-    Object? profileImageUrl = freezed,
+    Object? phoneNumber = null,
+    Object? email = null,
+    Object? profileImageUrl = null,
     Object? rating = null,
     Object? completedJobs = null,
     Object? responseRate = null,
+    Object? services = null,
+    Object? certifications = null,
+    Object? isAvailable = null,
+    Object? createdAt = null,
+    Object? updatedAt = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -83,10 +104,18 @@ class _$ProfessionalCopyWithImpl<$Res, $Val extends Professional>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      profileImageUrl: freezed == profileImageUrl
+      phoneNumber: null == phoneNumber
+          ? _value.phoneNumber
+          : phoneNumber // ignore: cast_nullable_to_non_nullable
+              as String,
+      email: null == email
+          ? _value.email
+          : email // ignore: cast_nullable_to_non_nullable
+              as String,
+      profileImageUrl: null == profileImageUrl
           ? _value.profileImageUrl
           : profileImageUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
       rating: null == rating
           ? _value.rating
           : rating // ignore: cast_nullable_to_non_nullable
@@ -99,6 +128,26 @@ class _$ProfessionalCopyWithImpl<$Res, $Val extends Professional>
           ? _value.responseRate
           : responseRate // ignore: cast_nullable_to_non_nullable
               as double,
+      services: null == services
+          ? _value.services
+          : services // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      certifications: null == certifications
+          ? _value.certifications
+          : certifications // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      isAvailable: null == isAvailable
+          ? _value.isAvailable
+          : isAvailable // ignore: cast_nullable_to_non_nullable
+              as bool,
+      createdAt: null == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      updatedAt: null == updatedAt
+          ? _value.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
     ) as $Val);
   }
 }
@@ -114,10 +163,17 @@ abstract class _$$ProfessionalImplCopyWith<$Res>
   $Res call(
       {String id,
       String name,
-      String? profileImageUrl,
+      String phoneNumber,
+      String email,
+      String profileImageUrl,
       double rating,
       int completedJobs,
-      double responseRate});
+      double responseRate,
+      List<String> services,
+      List<String> certifications,
+      bool isAvailable,
+      DateTime createdAt,
+      DateTime updatedAt});
 }
 
 /// @nodoc
@@ -135,10 +191,17 @@ class __$$ProfessionalImplCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? name = null,
-    Object? profileImageUrl = freezed,
+    Object? phoneNumber = null,
+    Object? email = null,
+    Object? profileImageUrl = null,
     Object? rating = null,
     Object? completedJobs = null,
     Object? responseRate = null,
+    Object? services = null,
+    Object? certifications = null,
+    Object? isAvailable = null,
+    Object? createdAt = null,
+    Object? updatedAt = null,
   }) {
     return _then(_$ProfessionalImpl(
       id: null == id
@@ -149,10 +212,18 @@ class __$$ProfessionalImplCopyWithImpl<$Res>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      profileImageUrl: freezed == profileImageUrl
+      phoneNumber: null == phoneNumber
+          ? _value.phoneNumber
+          : phoneNumber // ignore: cast_nullable_to_non_nullable
+              as String,
+      email: null == email
+          ? _value.email
+          : email // ignore: cast_nullable_to_non_nullable
+              as String,
+      profileImageUrl: null == profileImageUrl
           ? _value.profileImageUrl
           : profileImageUrl // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
       rating: null == rating
           ? _value.rating
           : rating // ignore: cast_nullable_to_non_nullable
@@ -165,6 +236,26 @@ class __$$ProfessionalImplCopyWithImpl<$Res>
           ? _value.responseRate
           : responseRate // ignore: cast_nullable_to_non_nullable
               as double,
+      services: null == services
+          ? _value._services
+          : services // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      certifications: null == certifications
+          ? _value._certifications
+          : certifications // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      isAvailable: null == isAvailable
+          ? _value.isAvailable
+          : isAvailable // ignore: cast_nullable_to_non_nullable
+              as bool,
+      createdAt: null == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      updatedAt: null == updatedAt
+          ? _value.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
     ));
   }
 }
@@ -175,10 +266,19 @@ class _$ProfessionalImpl implements _Professional {
   const _$ProfessionalImpl(
       {required this.id,
       required this.name,
-      this.profileImageUrl,
+      required this.phoneNumber,
+      required this.email,
+      required this.profileImageUrl,
       required this.rating,
       required this.completedJobs,
-      required this.responseRate});
+      required this.responseRate,
+      required final List<String> services,
+      required final List<String> certifications,
+      required this.isAvailable,
+      required this.createdAt,
+      required this.updatedAt})
+      : _services = services,
+        _certifications = certifications;
 
   factory _$ProfessionalImpl.fromJson(Map<String, dynamic> json) =>
       _$$ProfessionalImplFromJson(json);
@@ -188,17 +288,43 @@ class _$ProfessionalImpl implements _Professional {
   @override
   final String name;
   @override
-  final String? profileImageUrl;
+  final String phoneNumber;
+  @override
+  final String email;
+  @override
+  final String profileImageUrl;
   @override
   final double rating;
   @override
   final int completedJobs;
   @override
   final double responseRate;
+  final List<String> _services;
+  @override
+  List<String> get services {
+    if (_services is EqualUnmodifiableListView) return _services;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_services);
+  }
+
+  final List<String> _certifications;
+  @override
+  List<String> get certifications {
+    if (_certifications is EqualUnmodifiableListView) return _certifications;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_certifications);
+  }
+
+  @override
+  final bool isAvailable;
+  @override
+  final DateTime createdAt;
+  @override
+  final DateTime updatedAt;
 
   @override
   String toString() {
-    return 'Professional(id: $id, name: $name, profileImageUrl: $profileImageUrl, rating: $rating, completedJobs: $completedJobs, responseRate: $responseRate)';
+    return 'Professional(id: $id, name: $name, phoneNumber: $phoneNumber, email: $email, profileImageUrl: $profileImageUrl, rating: $rating, completedJobs: $completedJobs, responseRate: $responseRate, services: $services, certifications: $certifications, isAvailable: $isAvailable, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -208,19 +334,44 @@ class _$ProfessionalImpl implements _Professional {
             other is _$ProfessionalImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name) &&
+            (identical(other.phoneNumber, phoneNumber) ||
+                other.phoneNumber == phoneNumber) &&
+            (identical(other.email, email) || other.email == email) &&
             (identical(other.profileImageUrl, profileImageUrl) ||
                 other.profileImageUrl == profileImageUrl) &&
             (identical(other.rating, rating) || other.rating == rating) &&
             (identical(other.completedJobs, completedJobs) ||
                 other.completedJobs == completedJobs) &&
             (identical(other.responseRate, responseRate) ||
-                other.responseRate == responseRate));
+                other.responseRate == responseRate) &&
+            const DeepCollectionEquality().equals(other._services, _services) &&
+            const DeepCollectionEquality()
+                .equals(other._certifications, _certifications) &&
+            (identical(other.isAvailable, isAvailable) ||
+                other.isAvailable == isAvailable) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
+            (identical(other.updatedAt, updatedAt) ||
+                other.updatedAt == updatedAt));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, name, profileImageUrl,
-      rating, completedJobs, responseRate);
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      name,
+      phoneNumber,
+      email,
+      profileImageUrl,
+      rating,
+      completedJobs,
+      responseRate,
+      const DeepCollectionEquality().hash(_services),
+      const DeepCollectionEquality().hash(_certifications),
+      isAvailable,
+      createdAt,
+      updatedAt);
 
   /// Create a copy of Professional
   /// with the given fields replaced by the non-null parameter values.
@@ -242,10 +393,17 @@ abstract class _Professional implements Professional {
   const factory _Professional(
       {required final String id,
       required final String name,
-      final String? profileImageUrl,
+      required final String phoneNumber,
+      required final String email,
+      required final String profileImageUrl,
       required final double rating,
       required final int completedJobs,
-      required final double responseRate}) = _$ProfessionalImpl;
+      required final double responseRate,
+      required final List<String> services,
+      required final List<String> certifications,
+      required final bool isAvailable,
+      required final DateTime createdAt,
+      required final DateTime updatedAt}) = _$ProfessionalImpl;
 
   factory _Professional.fromJson(Map<String, dynamic> json) =
       _$ProfessionalImpl.fromJson;
@@ -255,13 +413,27 @@ abstract class _Professional implements Professional {
   @override
   String get name;
   @override
-  String? get profileImageUrl;
+  String get phoneNumber;
+  @override
+  String get email;
+  @override
+  String get profileImageUrl;
   @override
   double get rating;
   @override
   int get completedJobs;
   @override
   double get responseRate;
+  @override
+  List<String> get services;
+  @override
+  List<String> get certifications;
+  @override
+  bool get isAvailable;
+  @override
+  DateTime get createdAt;
+  @override
+  DateTime get updatedAt;
 
   /// Create a copy of Professional
   /// with the given fields replaced by the non-null parameter values.

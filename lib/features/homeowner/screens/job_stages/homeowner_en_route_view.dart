@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../../../jobs/models/job.dart';
+import '../../../professional/models/professional.dart';
 
 class HomeownerEnRouteView extends ConsumerWidget {
   final Job job;
@@ -192,7 +193,7 @@ class HomeownerEnRouteView extends ConsumerWidget {
               ),
               child: Center(
                 child: Text(
-                  job.professional?.name.split(' ').map((e) => e[0]).join('') ??
+                  Professional.fromJson(job.professional ?? {}).name.split(' ').map((e) => e[0]).join('') ??
                       '',
                   style: TextStyle(
                     fontSize: 18,
@@ -208,7 +209,7 @@ class HomeownerEnRouteView extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    job.professional?.name ?? '',
+                    Professional.fromJson(job.professional ?? {}).name,
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
@@ -224,7 +225,7 @@ class HomeownerEnRouteView extends ConsumerWidget {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        '${job.professional?.rating} (${job.professional?.completedJobs} reviews)',
+                        '${Professional.fromJson(job.professional ?? {}).rating} (${Professional.fromJson(job.professional ?? {}).completedJobs} reviews)',
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.grey[600],
@@ -260,7 +261,7 @@ class HomeownerEnRouteView extends ConsumerWidget {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        '${(job.professional?.responseRate ?? 0 * 100).toInt()}% completion rate',
+                        '${(Professional.fromJson(job.professional ?? {}).responseRate * 100).toInt()}% completion rate',
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.grey[600],

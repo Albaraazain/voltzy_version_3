@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:voltzy_version_3/features/homeowner/providers/homeowner_job_providers.dart';
 import 'package:voltzy_version_3/features/jobs/models/job.dart';
+import 'package:voltzy_version_3/features/professional/models/professional.dart';
 import 'package:voltzy_version_3/shared/widgets/buttons.dart';
 import 'package:voltzy_version_3/shared/widgets/loading_indicator.dart';
 
@@ -121,7 +122,7 @@ class _JobDetailsView extends StatelessWidget {
   }
 
   Widget _buildProfessionalSection(ThemeData theme) {
-    final professional = job.professional!;
+    final professional = Professional.fromJson(job.professional!);
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -138,9 +139,9 @@ class _JobDetailsView extends StatelessWidget {
                 CircleAvatar(
                   radius: 30,
                   backgroundImage: professional.profileImageUrl != null
-                      ? NetworkImage(professional.profileImageUrl!)
+                      ? NetworkImage(professional.profileImageUrl)
                       : null,
-                  child: professional.profileImageUrl == null
+                  child: professional.profileImageUrl.isEmpty
                       ? const Icon(Icons.person, size: 32)
                       : null,
                 ),

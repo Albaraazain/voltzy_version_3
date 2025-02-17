@@ -20,6 +20,7 @@ ProfessionalJob _$ProfessionalJobFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$ProfessionalJob {
+  @JobConverter()
   Job get job => throw _privateConstructorUsedError;
   JobStage get stage => throw _privateConstructorUsedError;
   JobStatus get status => throw _privateConstructorUsedError;
@@ -45,7 +46,7 @@ abstract class $ProfessionalJobCopyWith<$Res> {
       _$ProfessionalJobCopyWithImpl<$Res, ProfessionalJob>;
   @useResult
   $Res call(
-      {Job job,
+      {@JobConverter() Job job,
       JobStage stage,
       JobStatus status,
       JobUrgency urgency,
@@ -131,7 +132,7 @@ abstract class _$$ProfessionalJobImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {Job job,
+      {@JobConverter() Job job,
       JobStage stage,
       JobStatus status,
       JobUrgency urgency,
@@ -201,7 +202,7 @@ class __$$ProfessionalJobImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$ProfessionalJobImpl implements _ProfessionalJob {
   const _$ProfessionalJobImpl(
-      {required this.job,
+      {@JobConverter() required this.job,
       required this.stage,
       required this.status,
       required this.urgency,
@@ -213,6 +214,7 @@ class _$ProfessionalJobImpl implements _ProfessionalJob {
       _$$ProfessionalJobImplFromJson(json);
 
   @override
+  @JobConverter()
   final Job job;
   @override
   final JobStage stage;
@@ -272,7 +274,7 @@ class _$ProfessionalJobImpl implements _ProfessionalJob {
 
 abstract class _ProfessionalJob implements ProfessionalJob {
   const factory _ProfessionalJob(
-      {required final Job job,
+      {@JobConverter() required final Job job,
       required final JobStage stage,
       required final JobStatus status,
       required final JobUrgency urgency,
@@ -284,6 +286,7 @@ abstract class _ProfessionalJob implements ProfessionalJob {
       _$ProfessionalJobImpl.fromJson;
 
   @override
+  @JobConverter()
   Job get job;
   @override
   JobStage get stage;

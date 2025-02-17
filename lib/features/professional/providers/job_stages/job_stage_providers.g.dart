@@ -6,7 +6,7 @@ part of 'job_stage_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$activeJobStageHash() => r'a2d62b50f4ab0e2b7d6f6001563df29ad97455d2';
+String _$activeJobStageHash() => r'96fdd3fdc5fa1416128b9146e6ebb22a36b1fdac';
 
 /// See also [ActiveJobStage].
 @ProviderFor(ActiveJobStage)
@@ -22,7 +22,7 @@ final activeJobStageProvider =
 );
 
 typedef _$ActiveJobStage = AutoDisposeNotifier<JobStage>;
-String _$enRouteStateHash() => r'f129ddf7a53de8fb0563646649e8377ae52ab53f';
+String _$enRouteStateHash() => r'6263896140c99532fa1e64dec5c3420fc30f1d1d';
 
 /// See also [EnRouteState].
 @ProviderFor(EnRouteState)
@@ -37,7 +37,7 @@ final enRouteStateProvider =
 );
 
 typedef _$EnRouteState = AutoDisposeAsyncNotifier<void>;
-String _$atLocationStateHash() => r'21e2fada11a13908894c0c1afae0d0e233a3ea5a';
+String _$atLocationStateHash() => r'eaa33331f92aed9b1c09c78f185e7cc871131318';
 
 /// See also [AtLocationState].
 @ProviderFor(AtLocationState)
@@ -53,7 +53,7 @@ final atLocationStateProvider =
 );
 
 typedef _$AtLocationState = AutoDisposeAsyncNotifier<void>;
-String _$diagnosisStateHash() => r'1294574357e8ad577e77ab0b8f25bc820fffaf63';
+String _$diagnosisStateHash() => r'a104a67141aa7ae235ee65fe08f5a2e0486962dc';
 
 /// See also [DiagnosisState].
 @ProviderFor(DiagnosisState)
@@ -69,7 +69,7 @@ final diagnosisStateProvider =
 );
 
 typedef _$DiagnosisState = AutoDisposeAsyncNotifier<void>;
-String _$quoteStateHash() => r'7f5733223e90befa17e010ccb8261b01aac8d2d8';
+String _$quoteStateHash() => r'f4745c6f190e933df492d2857b5798169903fbdb';
 
 /// See also [QuoteState].
 @ProviderFor(QuoteState)
@@ -84,7 +84,7 @@ final quoteStateProvider =
 );
 
 typedef _$QuoteState = AutoDisposeAsyncNotifier<void>;
-String _$inProgressStateHash() => r'6b7fc148c1912fe193f7b091bf72b74694f3bb00';
+String _$inProgressStateHash() => r'99ab01ef6ff6b63c5987af722ee03d152bfa90a6';
 
 /// See also [InProgressState].
 @ProviderFor(InProgressState)
@@ -100,7 +100,7 @@ final inProgressStateProvider =
 );
 
 typedef _$InProgressState = AutoDisposeAsyncNotifier<void>;
-String _$completionStateHash() => r'7130ef31b898c9b9074f4e7e59c00414421ab568';
+String _$completionStateHash() => r'8f902a03bdc4bd63407557d87f2d9bb08063d913';
 
 /// See also [CompletionState].
 @ProviderFor(CompletionState)

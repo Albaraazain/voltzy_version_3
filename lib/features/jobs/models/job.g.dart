@@ -6,85 +6,74 @@ part of 'job.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$LocationImpl _$$LocationImplFromJson(Map<String, dynamic> json) =>
-    _$LocationImpl(
-      address: json['address'] as String,
-      latitude: (json['latitude'] as num).toDouble(),
-      longitude: (json['longitude'] as num).toDouble(),
-    );
-
-Map<String, dynamic> _$$LocationImplToJson(_$LocationImpl instance) =>
-    <String, dynamic>{
-      'address': instance.address,
-      'latitude': instance.latitude,
-      'longitude': instance.longitude,
-    };
-
 _$JobImpl _$$JobImplFromJson(Map<String, dynamic> json) => _$JobImpl(
       id: json['id'] as String,
+      homeownerName: json['homeownerName'] as String,
+      homeownerPhoneNumber: json['homeownerPhoneNumber'] as String,
+      category: json['category'] as String,
+      subcategory: json['subcategory'] as String,
+      serviceType: json['serviceType'] as String,
       title: json['title'] as String,
       description: json['description'] as String,
-      location: Location.fromJson(json['location'] as Map<String, dynamic>),
+      location: const LocationConverter()
+          .fromJson(json['location'] as Map<String, dynamic>),
       stage: $enumDecode(_$JobStageEnumMap, json['stage']),
       status: $enumDecode(_$JobStatusEnumMap, json['status']),
       urgency: $enumDecode(_$JobUrgencyEnumMap, json['urgency']),
+      budget: (json['budget'] as num).toDouble(),
+      estimatedDuration: (json['estimatedDuration'] as num).toInt(),
       createdAt: DateTime.parse(json['createdAt'] as String),
-      homeownerId: json['homeownerId'] as String,
-      homeownerName: json['homeownerName'] as String,
-      homeownerPhoneNumber: json['homeownerPhoneNumber'] as String,
-      professional: json['professional'] == null
-          ? null
-          : Professional.fromJson(json['professional'] as Map<String, dynamic>),
-      category: json['category'] as String?,
-      subcategory: json['subcategory'] as String?,
-      photos:
-          (json['photos'] as List<dynamic>?)?.map((e) => e as String).toList(),
-      notes: json['notes'] as String?,
+      updatedAt: DateTime.parse(json['updatedAt'] as String),
+      professionalId: json['professionalId'] as String?,
+      professional: json['professional'] as Map<String, dynamic>?,
       finalPrice: (json['finalPrice'] as num?)?.toDouble(),
       rating: (json['rating'] as num?)?.toDouble(),
       review: json['review'] as String?,
+      photos: (json['photos'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+      notes: json['notes'] as String?,
       completedAt: json['completedAt'] == null
           ? null
           : DateTime.parse(json['completedAt'] as String),
-      budget: (json['budget'] as num?)?.toDouble(),
-      estimatedDuration: json['estimatedDuration'] == null
-          ? null
-          : Duration(microseconds: (json['estimatedDuration'] as num).toInt()),
     );
 
 Map<String, dynamic> _$$JobImplToJson(_$JobImpl instance) => <String, dynamic>{
       'id': instance.id,
+      'homeownerName': instance.homeownerName,
+      'homeownerPhoneNumber': instance.homeownerPhoneNumber,
+      'category': instance.category,
+      'subcategory': instance.subcategory,
+      'serviceType': instance.serviceType,
       'title': instance.title,
       'description': instance.description,
-      'location': instance.location,
+      'location': const LocationConverter().toJson(instance.location),
       'stage': _$JobStageEnumMap[instance.stage]!,
       'status': _$JobStatusEnumMap[instance.status]!,
       'urgency': _$JobUrgencyEnumMap[instance.urgency]!,
+      'budget': instance.budget,
+      'estimatedDuration': instance.estimatedDuration,
       'createdAt': instance.createdAt.toIso8601String(),
-      'homeownerId': instance.homeownerId,
-      'homeownerName': instance.homeownerName,
-      'homeownerPhoneNumber': instance.homeownerPhoneNumber,
+      'updatedAt': instance.updatedAt.toIso8601String(),
+      'professionalId': instance.professionalId,
       'professional': instance.professional,
-      'category': instance.category,
-      'subcategory': instance.subcategory,
-      'photos': instance.photos,
-      'notes': instance.notes,
       'finalPrice': instance.finalPrice,
       'rating': instance.rating,
       'review': instance.review,
+      'photos': instance.photos,
+      'notes': instance.notes,
       'completedAt': instance.completedAt?.toIso8601String(),
-      'budget': instance.budget,
-      'estimatedDuration': instance.estimatedDuration?.inMicroseconds,
     };
 
 const _$JobStageEnumMap = {
-  JobStage.quoteCreation: 'quoteCreation',
+  JobStage.pending: 'pending',
   JobStage.enRoute: 'enRoute',
   JobStage.atLocation: 'atLocation',
   JobStage.diagnosis: 'diagnosis',
+  JobStage.quoteCreation: 'quoteCreation',
   JobStage.inProgress: 'inProgress',
   JobStage.completion: 'completion',
-  JobStage.completed: 'completed',
 };
 
 const _$JobStatusEnumMap = {

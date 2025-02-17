@@ -1,131 +1,199 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:voltzy_version_3/core/providers/auth_provider.dart';
-import 'package:voltzy_version_3/core/repositories/auth_repository.dart';
-import 'package:voltzy_version_3/shared/widgets/buttons.dart';
+import '../../../core/providers/theme_provider.dart';
+import '../../../core/providers/auth_provider.dart';
+import '../../../core/utils/logger.dart';
+import '../../../features/auth/domain/models/user_type.dart';
+import '../../../features/auth/providers/user_type_provider.dart';
 
 class WelcomeScreen extends ConsumerWidget {
   const WelcomeScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final authState = ref.watch(authProvider);
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
-    // Show loading indicator if user is logged in but type not determined
-    if (authState.user != null && authState.userType == null) {
-      return const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-    }
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                'Welcome to Voltzy',
-                style: Theme.of(context).textTheme.displaySmall,
-                textAlign: TextAlign.center,
+      body: Container(
+        color: colorScheme.surface,
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 40),
+                  Hero(
+                    tag: 'logo',
+                    child: Image.asset(
+                      'assets/logo.png',
+                      width: 160,
+                      height: 160,
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+                  TweenAnimationBuilder(
+                    duration: const Duration(milliseconds: 800),
+                    tween: Tween(begin: 0.0, end: 1.0),
+                    builder: (context, value, child) {
+                      return Opacity(
+                        opacity: value,
+                        child: Transform.translate(
+                          offset: Offset(0, 20 * (1 - value)),
+                          child: child,
+                        ),
+                      );
+                    },
+                    child: Column(
+                      children: [
+                        AnimatedDefaultTextStyle(
+                          duration: const Duration(milliseconds: 300),
+                          style: textTheme.headlineMedium!.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: colorScheme.onSurface,
+                          ),
+                          textAlign: TextAlign.center,
+                          child: const Text('Welcome to Voltzy'),
+                        ),
+                        const SizedBox(height: 8),
+                        AnimatedDefaultTextStyle(
+                          duration: const Duration(milliseconds: 300),
+                          style: textTheme.titleMedium!.copyWith(
+                            color: colorScheme.onSurface.withOpacity(0.6),
+                          ),
+                          textAlign: TextAlign.center,
+                          child: const Text('Choose your role to get started'),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 48),
+                  _buildRoleCard(
+                    context: context,
+                    title: 'Professional',
+                    description: 'I provide electrical services',
+                    icon: Icons.work,
+                    color: const Color(0xFF6C63FF),
+                    onTap: () {
+                      logger.i('Professional role card tapped');
+                      ref.read(userTypeNotifierProvider.notifier)
+                          .setUserType(UserType.professional.name);
+                      context.go('/login', extra: {
+                        'userType': UserType.professional.name
+                      });
+                    },
+                    colorScheme: colorScheme,
+                  ),
+                  const SizedBox(height: 24),
+                  _buildRoleCard(
+                    context: context,
+                    title: 'Homeowner',
+                    description: 'I need electrical services',
+                    icon: Icons.home,
+                    color: const Color(0xFFFF6584),
+                    onTap: () {
+                      logger.i('Homeowner role card tapped');
+                      ref.read(userTypeNotifierProvider.notifier)
+                          .setUserType(UserType.homeowner.name);
+                      context.go('/login', extra: {
+                        'userType': UserType.homeowner.name
+                      });
+                    },
+                    colorScheme: colorScheme,
+                  ),
+                  const SizedBox(height: 24),
+                ],
               ),
-              const SizedBox(height: 8),
-              Text(
-                'Choose how you want to use the app',
-                style: Theme.of(context).textTheme.bodyLarge,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 48),
-              _RoleCard(
-                title: 'I\'m a Professional',
-                description: 'Find jobs and manage your service business',
-                icon: Icons.work,
-                color: Colors.blue,
-                onTap: () => context.go(
-                  '/login',
-                  extra: {'userType': UserType.professional.name},
-                ),
-              ),
-              const SizedBox(height: 24),
-              _RoleCard(
-                title: 'I\'m a Homeowner',
-                description: 'Request services and manage your home',
-                icon: Icons.home,
-                color: Colors.pink,
-                onTap: () => context.go(
-                  '/login',
-                  extra: {'userType': UserType.homeowner.name},
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),
     );
   }
-}
 
-class _RoleCard extends StatelessWidget {
-  final String title;
-  final String description;
-  final IconData icon;
-  final Color color;
-  final VoidCallback onTap;
-
-  const _RoleCard({
-    required this.title,
-    required this.description,
-    required this.icon,
-    required this.color,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(32),
-          border: Border.all(
-            color: color.withOpacity(0.2),
-            width: 2,
+  Widget _buildRoleCard({
+    required BuildContext context,
+    required String title,
+    required String description,
+    required IconData icon,
+    required Color color,
+    required VoidCallback onTap,
+    required ColorScheme colorScheme,
+  }) {
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: TweenAnimationBuilder(
+        duration: const Duration(milliseconds: 200),
+        tween: Tween(begin: 1.0, end: 0.95),
+        builder: (context, value, child) {
+          return Transform.scale(
+            scale: value,
+            child: child,
+          );
+        },
+        child: Card(
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+            side: BorderSide(
+              color: colorScheme.outline.withOpacity(0.1),
+              width: 1,
+            ),
           ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Icon(
-                icon,
-                color: color,
-                size: 32,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              title,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    color: color,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(20),
+            onTap: onTap,
+            child: Container(
+              padding: const EdgeInsets.all(24),
+              width: double.infinity,
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: color.withOpacity(0.05),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Icon(
+                      icon,
+                      color: color,
+                      size: 28,
+                    ),
                   ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title,
+                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: color,
+                              ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          description,
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                              ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    color: color,
+                    size: 16,
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(height: 8),
-            Text(
-              description,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-          ],
+          ),
         ),
       ),
     );

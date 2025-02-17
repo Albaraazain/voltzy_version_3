@@ -44,7 +44,7 @@ final homeownerMyJobsProvider = AutoDisposeFutureProvider<List<Job>>.internal(
 // ignore: unused_element
 typedef HomeownerMyJobsRef = AutoDisposeFutureProviderRef<List<Job>>;
 String _$homeownerActiveJobsHash() =>
-    r'eddcf0ec5405ec933ad8cde9aa5be5bf7b11ee7c';
+    r'b1a37b7e59e5c9035162643fccd00214a6b7054c';
 
 /// See also [homeownerActiveJobs].
 @ProviderFor(homeownerActiveJobs)
@@ -233,7 +233,7 @@ class _HomeownerJobDetailsProviderElement
   String get jobId => (origin as HomeownerJobDetailsProvider).jobId;
 }
 
-String _$createJobHash() => r'e4bc56fe54d92f1ab9d806af799791a9cc8eedd2';
+String _$createJobHash() => r'acd64d5fa12be3a506fac4b84e71055457113ca1';
 
 /// See also [CreateJob].
 @ProviderFor(CreateJob)
@@ -248,7 +248,7 @@ final createJobProvider =
 );
 
 typedef _$CreateJob = AutoDisposeAsyncNotifier<void>;
-String _$cancelJobHash() => r'a0abbfcbcd3cd1922267dd96241b4eb0f6208104';
+String _$cancelJobHash() => r'02f5d6c4f0a15f009c4a13a59527a743a826f366';
 
 /// See also [CancelJob].
 @ProviderFor(CancelJob)
@@ -263,7 +263,7 @@ final cancelJobProvider =
 );
 
 typedef _$CancelJob = AutoDisposeAsyncNotifier<void>;
-String _$rateJobHash() => r'0c53a6f2c34e3d3490f426b7e93398e66f70ae6a';
+String _$rateJobHash() => r'6a0c79aefe72713ad12a1b840300aea69e80c3c0';
 
 /// See also [RateJob].
 @ProviderFor(RateJob)

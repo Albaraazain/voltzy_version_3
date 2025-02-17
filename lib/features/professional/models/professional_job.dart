@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../jobs/models/job.dart';
+import '../../../core/utils/json_converters.dart';
 
 part 'professional_job.freezed.dart';
 part 'professional_job.g.dart';
@@ -7,7 +8,7 @@ part 'professional_job.g.dart';
 @freezed
 class ProfessionalJob with _$ProfessionalJob {
   const factory ProfessionalJob({
-    required Job job,
+    @JobConverter() required Job job,
     required JobStage stage,
     required JobStatus status,
     required JobUrgency urgency,

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:voltzy_version_3/core/config/app_theme.dart';
 import 'package:voltzy_version_3/features/jobs/models/job.dart';
 import 'package:voltzy_version_3/features/professional/providers/professional_job_providers.dart';
 import 'package:voltzy_version_3/shared/widgets/app_bar.dart';
@@ -12,7 +11,6 @@ class JobRequestsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final jobRequests = ref.watch(jobRequestsProvider);
-    final jobRequestsController = ref.watch(jobRequestsControllerProvider);
 
     return Scaffold(
       body: SafeArea(
@@ -111,7 +109,7 @@ class JobRequestsScreen extends ConsumerWidget {
             onPressed: () => Navigator.pop(context, false),
             child: const Text('Cancel'),
           ),
-          FilledButton(
+          ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
             child: const Text('Accept'),
           ),
@@ -169,7 +167,7 @@ class JobRequestsScreen extends ConsumerWidget {
             onPressed: () => Navigator.pop(context, false),
             child: const Text('Cancel'),
           ),
-          FilledButton(
+          ElevatedButton(
             onPressed: () {
               if (formKey.currentState!.validate()) {
                 Navigator.pop(context, true);
@@ -262,7 +260,7 @@ class _JobRequestCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 4),
                 Text(
-                  'Est. ${job.estimatedDuration?.inHours}h',
+                  'Est. ${job.estimatedDuration != null ? job.estimatedDuration! ~/ 60 : 0}h',
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: colorScheme.onSurfaceVariant,
                   ),
@@ -293,7 +291,7 @@ class _JobRequestCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 16),
                 Expanded(
-                  child: FilledButton(
+                  child: ElevatedButton(
                     onPressed: onAccept,
                     child: const Text('Accept'),
                   ),
