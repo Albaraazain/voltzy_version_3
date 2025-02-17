@@ -9,22 +9,39 @@ import 'firebase_options.dart';
 import 'app.dart';
 import 'dart:developer' as developer;
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+void main() async {
+  // Catch any errors that occur during initialization
+  try {
+    WidgetsFlutterBinding.ensureInitialized();
+    developer.log('Starting app initialization...');
 
-  developer.log('Starting app in development mode...');
+    // Initialize Firebase
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    developer.log('Firebase initialized successfully');
 
-  // Initialize Firebase
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+    // Configure Firestore settings with persistence enabled
+    FirebaseFirestore.instance.settings = const Settings(
+      persistenceEnabled: true,
+      cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+    );
+    developer.log('Firestore settings configured');
 
-  // Enable offline persistence for Firestore
-  await FirebaseFirestore.instance.enablePersistence();
-
-  runApp(
-    const ProviderScope(
-      child: App(),
-    ),
-  );
+    // Run the app inside a try-catch to handle any initialization errors
+    runApp(
+      const ProviderScope(
+        child: App(),
+      ),
+    );
+    developer.log('App started successfully');
+  } catch (e, stackTrace) {
+    developer.log(
+      'Error during app initialization',
+      error: e,
+      stackTrace: stackTrace,
+    );
+    // Re-throw the error to crash the app if initialization fails
+    rethrow;
+  }
 }
